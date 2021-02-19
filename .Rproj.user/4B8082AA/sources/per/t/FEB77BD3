@@ -3,7 +3,7 @@
     "path": "~/Dropbox (The University of Manchester)/N8_covid/analysis/n8_covid/explore.R",
     "project_path": "explore.R",
     "type": "r_source",
-    "hash": "1162547180",
+    "hash": "1842627702",
     "contents": "",
     "dirty": false,
     "created": 1613745427495.0,
@@ -17,11 +17,11 @@
         "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1613753585,
+    "lastKnownWriteTime": 1613753845,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1613753585,
+    "last_content_update": 1613753845221,
     "read_only": false,
     "read_only_alternatives": []
 }

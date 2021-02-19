@@ -10,4 +10,4 @@ calls %>% group_by(call_origin) %>% count() %>% View()
 calls <- calls %>% mutate(year = year(ymd_hms(incident_date_time)))
 
 # 
-# gitignore::gi_write_gitignore("R")
+gitignore::gi_write_gitignore("r")
