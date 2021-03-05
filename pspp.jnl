@@ -1,0 +1,764 @@
+GET FILE="C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por".
+
+GET DATA
+  /TYPE=TXT
+  /FILE="C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por"
+  /ARRANGEMENT=DELIMITED
+  /DELCASE=LINE
+  /DELIMITERS="/"
+  /VARIABLES=
+    VAR001 A97
+    VAR002 F40.0
+    VAR003 A73
+    VAR004 F40.0
+    VAR005 F40.0
+    VAR006 F40.0
+    VAR007 F40.0
+    VAR008 F40.0
+    VAR009 F40.0
+    VAR010 F40.0
+    VAR011 A47
+    VAR012 A45
+    VAR013 F39.0
+    VAR014 F24.0
+    VAR015 F16.0
+    VAR016 F7.0
+    VAR017 F13.0
+    VAR018 F3.0
+    VAR019 F8.0
+    VAR020 A11
+    VAR021 A2.
+
+VARIABLE LEVEL VAR001 (SCALE).
+
+VARIABLE ALIGNMENT VAR001 (RIGHT).
+
+VARIABLE WIDTH VAR001 (8).
+
+VARIABLE LEVEL VAR003 (SCALE).
+
+VARIABLE ALIGNMENT VAR003 (RIGHT).
+
+VARIABLE WIDTH VAR003 (8).
+
+VARIABLE LEVEL VAR011 (SCALE).
+
+VARIABLE ALIGNMENT VAR011 (RIGHT).
+
+VARIABLE WIDTH VAR011 (8).
+
+VARIABLE LEVEL VAR012 (SCALE).
+
+VARIABLE ALIGNMENT VAR012 (RIGHT).
+
+VARIABLE WIDTH VAR012 (8).
+
+VARIABLE LEVEL VAR020 (SCALE).
+
+VARIABLE ALIGNMENT VAR020 (RIGHT).
+
+VARIABLE WIDTH VAR020 (8).
+
+VARIABLE LEVEL VAR021 (SCALE).
+
+VARIABLE ALIGNMENT VAR021 (RIGHT).
+
+VARIABLE WIDTH VAR021 (8).
+
+warning: Missing value(s) for all variables from VAR002 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:2.54-2.80: warning: Data for variable VAR002 is not valid as format F: Number followed by garbage.
+warning: Missing value(s) for all variables from VAR003 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR002 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR002 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:5.24-5.80: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR003 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR004 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:7.8-7.43: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:7.53-7.60: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:7.62: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:7.68: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:7.76-7.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:8.62-8.63: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:8.65-8.72: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:9.19-9.20: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:9.22-9.35: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:9.66-9.68: warning: Data for variable VAR019 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:10.47-10.49: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:11.32-11.40: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:12.59-12.60: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:12.62-12.80: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:13.35-13.37: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:13.79-13.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:14.26-14.27: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:14.29-14.52: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR020 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:15.4-15.6: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:15.50-15.58: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:15.78-15.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:16.2-16.42: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:16.46-16.54: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:16.78-16.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:24.4-24.58: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:24.62-24.70: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:25.10-25.12: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:25.14-25.64: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:25.68-25.76: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:26.16-26.18: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:26.20-26.64: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:26.68-26.76: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:27.16-27.18: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:27.20-27.59: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:27.63-27.71: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:28.11-28.13: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:28.15-28.48: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:28.52-28.60: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:28.80: warning: Data for variable VAR015 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR016 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:29.4-29.56: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:29.60-29.68: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:30.12-30.62: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:30.66-30.74: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:31.14-31.16: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:31.18-31.69: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:31.73-31.80: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:32.21-32.23: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:32.25-32.80: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:43.78-43.80: warning: Data for variable VAR014 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:44.22-44.24: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:44.26-44.67: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:45.11-45.14: warning: Data for variable VAR006 is not valid as format F: Number followed by garbage.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:45.16-45.19: warning: Data for variable VAR007 is not valid as format F: Number followed by garbage.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:45.21-45.23: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por:45.25-45.62: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+note: Warnings (101) exceed limit (100).  Syntax processing will be halted.
+SAVE OUTFILE="C:\Users\naken\AppData\Local\Temp\Temp1_4800spss_50f1f88bc91231f4cda26b2638c88038 (2).zip\UKDA-4800-spss\spss\esytc_1.por".
+
+GET DATA
+  /TYPE=TXT
+  /FILE="C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_4.por"
+  /ARRANGEMENT=DELIMITED
+  /DELCASE=LINE
+  /DELIMITERS=":"
+  /VARIABLES=
+    VAR001 A97
+    VAR002 A79
+    VAR003 A61
+    VAR004 F8.2.
+
+VARIABLE LEVEL VAR001 (SCALE).
+
+VARIABLE ALIGNMENT VAR001 (RIGHT).
+
+VARIABLE WIDTH VAR001 (8).
+
+VARIABLE LEVEL VAR002 (SCALE).
+
+VARIABLE ALIGNMENT VAR002 (RIGHT).
+
+VARIABLE WIDTH VAR002 (8).
+
+VARIABLE LEVEL VAR003 (SCALE).
+
+VARIABLE ALIGNMENT VAR003 (RIGHT).
+
+VARIABLE WIDTH VAR003 (8).
+
+GET DATA
+  /TYPE=TXT
+  /FILE="C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por"
+  /ARRANGEMENT=DELIMITED
+  /DELCASE=LINE
+  /FIRSTCASE=7
+  /DELIMITERS="/"
+  /VARIABLES=
+    VAR001 A79
+    VAR002 F40.0
+    VAR003 A73
+    VAR004 F40.0
+    VAR005 F40.0
+    VAR006 F40.0
+    VAR007 F40.0
+    VAR008 F40.0
+    VAR009 F40.0
+    VAR010 F40.0
+    VAR011 A47
+    VAR012 A45
+    VAR013 F39.0
+    VAR014 F24.0
+    VAR015 F16.0
+    VAR016 F7.0
+    VAR017 F13.0
+    VAR018 F3.0
+    VAR019 F8.0
+    VAR020 A11
+    VAR021 A2.
+
+VARIABLE LEVEL VAR001 (SCALE).
+
+VARIABLE ALIGNMENT VAR001 (RIGHT).
+
+VARIABLE WIDTH VAR001 (8).
+
+VARIABLE LEVEL VAR003 (SCALE).
+
+VARIABLE ALIGNMENT VAR003 (RIGHT).
+
+VARIABLE WIDTH VAR003 (8).
+
+VARIABLE LEVEL VAR011 (SCALE).
+
+VARIABLE ALIGNMENT VAR011 (RIGHT).
+
+VARIABLE WIDTH VAR011 (8).
+
+VARIABLE LEVEL VAR012 (SCALE).
+
+VARIABLE ALIGNMENT VAR012 (RIGHT).
+
+VARIABLE WIDTH VAR012 (8).
+
+VARIABLE LEVEL VAR020 (SCALE).
+
+VARIABLE ALIGNMENT VAR020 (RIGHT).
+
+VARIABLE WIDTH VAR020 (8).
+
+VARIABLE LEVEL VAR021 (SCALE).
+
+VARIABLE ALIGNMENT VAR021 (RIGHT).
+
+VARIABLE WIDTH VAR021 (8).
+
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:7.8-7.43: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:7.53-7.60: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:7.62: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:7.68: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:7.76-7.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:8.62-8.63: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:8.65-8.72: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:9.19-9.20: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:9.22-9.35: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:9.66-9.68: warning: Data for variable VAR019 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:10.47-10.49: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:11.32-11.40: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:12.59-12.60: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:12.62-12.80: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:13.35-13.37: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:13.79-13.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:14.26-14.27: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:14.29-14.52: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR020 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:15.4-15.6: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:15.50-15.58: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:15.78-15.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:16.2-16.42: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:16.46-16.54: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:16.78-16.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:24.4-24.58: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:24.62-24.70: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:25.10-25.12: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:25.14-25.64: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:25.68-25.76: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:26.16-26.18: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:26.20-26.64: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:26.68-26.76: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:27.16-27.18: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:27.20-27.59: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:27.63-27.71: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:28.11-28.13: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:28.15-28.48: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:28.52-28.60: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:28.80: warning: Data for variable VAR015 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR016 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:29.4-29.56: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:29.60-29.68: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:30.12-30.62: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:30.66-30.74: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:31.14-31.16: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:31.18-31.69: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:31.73-31.80: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:32.21-32.23: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:32.25-32.80: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:43.78-43.80: warning: Data for variable VAR014 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:44.22-44.24: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:44.26-44.67: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:45.11-45.14: warning: Data for variable VAR006 is not valid as format F: Number followed by garbage.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:45.16-45.19: warning: Data for variable VAR007 is not valid as format F: Number followed by garbage.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:45.21-45.23: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:45.25-45.62: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:46.18-46.20: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:46.22-46.60: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:46.64-46.72: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:47.8-47.10: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:47.12-47.43: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:47.47-47.55: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_1.por:47.75-47.77: warning: Data for variable VAR015 is not valid as format F: Field contents are not numeric.
+note: Warnings (101) exceed limit (100).  Syntax processing will be halted.
+GET DATA
+  /TYPE=TXT
+  /FILE="C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (2)\UKDA-4800-spss\spss\esytc_4.por"
+  /ARRANGEMENT=DELIMITED
+  /DELCASE=LINE
+  /FIRSTCASE=7
+  /DELIMITERS=":"
+  /VARIABLES=
+    VAR001 A87
+    VAR002 A79
+    VAR003 A61
+    VAR004 F8.2.
+
+VARIABLE LEVEL VAR001 (SCALE).
+
+VARIABLE ALIGNMENT VAR001 (RIGHT).
+
+VARIABLE WIDTH VAR001 (8).
+
+VARIABLE LEVEL VAR002 (SCALE).
+
+VARIABLE ALIGNMENT VAR002 (RIGHT).
+
+VARIABLE WIDTH VAR002 (8).
+
+VARIABLE LEVEL VAR003 (SCALE).
+
+VARIABLE ALIGNMENT VAR003 (RIGHT).
+
+VARIABLE WIDTH VAR003 (8).
+
+GET FILE="C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por".
+
+GET FILE="C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_4.por".
+
+FILTER BY DUMMYID.
+
+.5-10: error: GLM: YAVHIT is not a variable name.
+GLM YAVHIT BY  ETHGP01.
+
+GLM YAVHIT01 BY  ETHGP01.
+
+GET DATA
+  /TYPE=TXT
+  /FILE="C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1).zip"
+  /ARRANGEMENT=DELIMITED
+  /DELCASE=LINE
+  /DELIMITERS=","
+  /VARIABLES=
+    VAR001 A266.
+
+VARIABLE LEVEL VAR001 (SCALE).
+
+VARIABLE ALIGNMENT VAR001 (RIGHT).
+
+VARIABLE WIDTH VAR001 (8).
+
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+warning: Record ends in data not part of any field.
+note: Warnings (101) exceed limit (100).  Syntax processing will be halted.
+GET DATA
+  /TYPE=TXT
+  /FILE="C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por"
+  /ARRANGEMENT=DELIMITED
+  /DELCASE=LINE
+  /DELIMITERS="/"
+  /VARIABLES=
+    VAR001 A97
+    VAR002 F40.0
+    VAR003 A73
+    VAR004 F40.0
+    VAR005 F40.0
+    VAR006 F40.0
+    VAR007 F40.0
+    VAR008 F40.0
+    VAR009 F40.0
+    VAR010 F40.0
+    VAR011 A47
+    VAR012 A45
+    VAR013 F39.0
+    VAR014 F24.0
+    VAR015 F16.0
+    VAR016 F7.0
+    VAR017 F13.0
+    VAR018 F3.0
+    VAR019 F8.0
+    VAR020 A11
+    VAR021 A2.
+
+VARIABLE LEVEL VAR001 (SCALE).
+
+VARIABLE ALIGNMENT VAR001 (RIGHT).
+
+VARIABLE WIDTH VAR001 (8).
+
+VARIABLE LEVEL VAR003 (SCALE).
+
+VARIABLE ALIGNMENT VAR003 (RIGHT).
+
+VARIABLE WIDTH VAR003 (8).
+
+VARIABLE LEVEL VAR011 (SCALE).
+
+VARIABLE ALIGNMENT VAR011 (RIGHT).
+
+VARIABLE WIDTH VAR011 (8).
+
+VARIABLE LEVEL VAR012 (SCALE).
+
+VARIABLE ALIGNMENT VAR012 (RIGHT).
+
+VARIABLE WIDTH VAR012 (8).
+
+VARIABLE LEVEL VAR020 (SCALE).
+
+VARIABLE ALIGNMENT VAR020 (RIGHT).
+
+VARIABLE WIDTH VAR020 (8).
+
+VARIABLE LEVEL VAR021 (SCALE).
+
+VARIABLE ALIGNMENT VAR021 (RIGHT).
+
+VARIABLE WIDTH VAR021 (8).
+
+GET DATA
+  /TYPE=TXT
+  /FILE="C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por"
+  /ARRANGEMENT=DELIMITED
+  /DELCASE=LINE
+  /DELIMITERS="/"
+  /VARIABLES=
+    VAR001 A97
+    VAR002 F40.0
+    VAR003 A73
+    VAR004 F40.0
+    VAR005 F40.0
+    VAR006 F40.0
+    VAR007 F40.0
+    VAR008 F40.0
+    VAR009 F40.0
+    VAR010 F40.0
+    VAR011 A47
+    VAR012 A45
+    VAR013 F39.0
+    VAR014 F24.0
+    VAR015 F16.0
+    VAR016 F7.0
+    VAR017 F13.0
+    VAR018 F3.0
+    VAR019 F8.0
+    VAR020 A11
+    VAR021 A2.
+
+VARIABLE LEVEL VAR001 (SCALE).
+
+VARIABLE ALIGNMENT VAR001 (RIGHT).
+
+VARIABLE WIDTH VAR001 (8).
+
+VARIABLE LEVEL VAR003 (SCALE).
+
+VARIABLE ALIGNMENT VAR003 (RIGHT).
+
+VARIABLE WIDTH VAR003 (8).
+
+VARIABLE LEVEL VAR011 (SCALE).
+
+VARIABLE ALIGNMENT VAR011 (RIGHT).
+
+VARIABLE WIDTH VAR011 (8).
+
+VARIABLE LEVEL VAR012 (SCALE).
+
+VARIABLE ALIGNMENT VAR012 (RIGHT).
+
+VARIABLE WIDTH VAR012 (8).
+
+VARIABLE LEVEL VAR020 (SCALE).
+
+VARIABLE ALIGNMENT VAR020 (RIGHT).
+
+VARIABLE WIDTH VAR020 (8).
+
+VARIABLE LEVEL VAR021 (SCALE).
+
+VARIABLE ALIGNMENT VAR021 (RIGHT).
+
+VARIABLE WIDTH VAR021 (8).
+
+warning: Missing value(s) for all variables from VAR002 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:2.54-2.80: warning: Data for variable VAR002 is not valid as format F: Number followed by garbage.
+warning: Missing value(s) for all variables from VAR003 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR002 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR002 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:5.24-5.80: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR003 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR004 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:7.8-7.43: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:7.53-7.60: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:7.62: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:7.68: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:7.76-7.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:8.62-8.63: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:8.65-8.72: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:9.19-9.20: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:9.22-9.35: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:9.66-9.68: warning: Data for variable VAR019 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:10.47-10.49: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:11.32-11.40: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:12.59-12.60: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:12.62-12.80: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:13.35-13.37: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:13.79-13.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:14.26-14.27: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:14.29-14.52: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR020 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:15.4-15.6: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:15.50-15.58: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:15.78-15.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:16.2-16.42: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:16.46-16.54: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:16.78-16.80: warning: Data for variable VAR013 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR014 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:24.4-24.58: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:24.62-24.70: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:25.10-25.12: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:25.14-25.64: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:25.68-25.76: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:26.16-26.18: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:26.20-26.64: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:26.68-26.76: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:27.16-27.18: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:27.20-27.59: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:27.63-27.71: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:28.11-28.13: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:28.15-28.48: warning: Data for variable VAR005 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:28.52-28.60: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:28.80: warning: Data for variable VAR015 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR016 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:29.4-29.56: warning: Data for variable VAR002 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:29.60-29.68: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:30.12-30.62: warning: Data for variable VAR004 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:30.66-30.74: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:31.14-31.16: warning: Data for variable VAR006 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:31.18-31.69: warning: Data for variable VAR007 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:31.73-31.80: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR010 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:32.21-32.23: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:32.25-32.80: warning: Data for variable VAR010 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR011 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+warning: Missing value(s) for all variables from VAR013 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:43.78-43.80: warning: Data for variable VAR014 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:44.22-44.24: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:44.26-44.67: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR012 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:45.11-45.14: warning: Data for variable VAR006 is not valid as format F: Number followed by garbage.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:45.16-45.19: warning: Data for variable VAR007 is not valid as format F: Number followed by garbage.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:45.21-45.23: warning: Data for variable VAR008 is not valid as format F: Field contents are not numeric.
+C:\Users\naken\Downloads\4800spss_50f1f88bc91231f4cda26b2638c88038 (1)\UKDA-4800-spss\spss\esytc_1.por:45.25-45.62: warning: Data for variable VAR009 is not valid as format F: Field contents are not numeric.
+warning: Missing value(s) for all variables from VAR015 onward.  These will be filled with the system-missing value or blanks, as appropriate.
+note: Warnings (101) exceed limit (100).  Syntax processing will be halted.
+GET FILE="C:\Users\naken\Documents\UKDA-4800-spss\spss\esytc_4.por".
+
+GET FILE="C:\Users\naken\Documents\UKDA-4800-spss\spss\esytc_1.por".
+
