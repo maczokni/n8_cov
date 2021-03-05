@@ -1,9 +1,12 @@
 ---
-title: "Untitled"
+title: "Reports of Incident Types and Call Origin to Cheshire"
 author: "Matthew P J Ashby"
 date: "26/02/2021"
 output: html_document
 ---
+
+This paper examines both the changes in incident types and the changes of call types over time using calls-for-service provided by Cheshire Police. Using data from 2015 to 2020, time series plots were created in order to analysis trends among the first U.K lockdown. 
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = TRUE, echo = FALSE)
@@ -15,11 +18,7 @@ library(tidyverse)
 ```
 
 ```{r load_data, include=FALSE}
-calls <- bind_rows(
-  read_excel("../../cheshire-calls/N8Data - Submitted Version.xlsx", sheet = 1),
-  read_excel("../../cheshire-calls/N8Data - Submitted Version.xlsx", sheet = 2)
-) %>% 
-  janitor::clean_names()
+calls <- read_csv("Z:\\n8_data.csv.gz")
 
 minor_categories <- calls %>% 
   count(incident_type) %>% 
@@ -118,20 +117,448 @@ covid_plot <- function(data, type, title) {
 }
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+# Changes in Incident Types Over Time
 
-```{r}
+The first part of this report examines the different incident types over time
+
+Each plot is presented with 3 dashed lines that represent; the first known U.K COVID-19 Case, the start of the first U.K lockdown 
+and the end of the first U.K lockdown.
+
+
+
+```{r Abandoned}
+covid_plot(calls, "Abandoned Phone Call", "Abandoned Phone Call")
+```
+
+
+The plot highlights a general increasing trend. Decrease in calls start from around June 2019 and continue until first U.K lockdown, then start to flatten off as lockdown ends. 
+
+
+
+```{r Admin}
+covid_plot(calls, "Advice/Directions/Admin", "Admin")
+```
+
+
+The plot highlights some cyclical movements with a steep increase of admin calls just before first U.K case of COVID-19. However, admin calls then remain relatively flat over the lockdown which could correlate with a decrease of crime reporting over the pandemic.
+
+
+
+```{r Alarms}
+covid_plot(calls, "alarms", "Alarms")
+```
+
+
+Seasonality is present from 2015 but starts to lose this trend over the lockdown with a steeper decrease in incidents involving activation of alarms. The plot supports criminological theory with more people remaining at home with the closure of retail/businensses.
+
+
+
+```{r Wildlife}
+covid_plot(calls, "animals", "Wildlife Concern")
+```
+
+
+Seasonality is present with a general decrease of wildlife and animal concern, but no noticeable trend.
+
+
+
+```{r ASB}
+covid_plot(calls, "ASB", "Anti-social behaviour")
+```
+
+
+The plot highlights some seasonality with a general decreasing trend. However, there is a sharp increase of ASB from December 2019 to June 2020. 
+
+
+
+
+```{r Burglary - Commercial}
+covid_plot(calls, "Burglary - Business/Commercial", "Burglary - Commercial")
+```
+
+
+General decrease in commercial burglary over the pandemic. This could be in line with more people working from home and less businesses open. However, there is no clear trend from 2015 so the cause for this decrease is not conclusive.
+
+
+
+
+```{r Burglary - Residential}
+covid_plot(calls, "Burglary - Residential", "Burglary - Residential")
+```
+
+
+We see a decrease in weekly incident counts over the pandemic but compared to commercial burglary, the patterns no longer follows the upward trend of seasonality. This is what we expect to see due to more people working from home, decreased opportunities and less chance for suitable targets.
+
+
+
+```{r Civil Disputes}
+
+covid_plot(calls, "Civil Disputes", "Civil Disputes")
+```
+
+
+Nothing that notifiable here. Downward trend that arguably flattens out after the lockdown ends.
+
+
+
+
+```{r Police Safety}
+
+covid_plot(calls, "Code Zero", "Police Safety")
+```
+
+
+Reports for police safety have increased slightly over the pandemic. Could be reflective of an increase in ASB or the monitoring of people breaking lockdown rules.
+
+
+
+
+```{r Minor Injuries}
+
+covid_plot(calls, "Collapse/Illness/Injury/Trapped", "Minor Injuries")
+```
+
+
+We see a small break in the trend and seasonlity but nothing that significant.
+
+
+
+
+```{r Compaints Against Police}
+
+covid_plot(calls, "Complaints Against Police", "Complaints Against Police")
+```
+
+
+Complaints against the police in the lockdown follow similar cycle patterns. There is a slightly higher peak after the first lockdown ended. 
+
+
+
+
+```{r Concern For Safety}
+covid_plot(calls, "Concern For Safety", "Concern For Safety")
+```
+
+
+Similar seasonal patterns from before and after the first U.K case with less reporting in December and an increase in summer months.
+
+
+
+
+```{r Criminal Damage}
+covid_plot(calls, "Criminal Damage", "Criminal Damage")
+```
+
+
+We see that reports of criminal damage decreased as we enter lockdown. This is in line with a change in routine activities as proposed in criminological theory. 
+
+
+
+```{r Distraction Burglary}
+covid_plot(calls, "Distraction Burglary", "Distraction Burglary")
+```
+
+
+Distraction Bulgary highlights no significant trend in the lockdown.
+
+
+
+
+```{r Domestic Incident}
+covid_plot(calls, "Domestic Incident", "Domestic Incident")
+```
+
+
+Domestic reports over the lockdown period follows seasonal patterns with an upwards trends. The plot would support literature surrounding an increase in domestic incidents due to the presence of being at home more.
+
+
+
+```{r Drug Related Offences}
+covid_plot(calls, "Drugs", "Drug Related Offences")
+```
+
+
+We see similar trends across the years but with a proportionality larger increase of drug related offenses over the lockdown. A fair amount of noise is also present. 
+
+
+
+```{r Firearms}
+covid_plot(calls, "firearms", "Firearms (non-notifiable and involved crime)")
+```
+
+
+Not much to note here. Some seasonal pattern with some noise.
+
+
+```{r Fraud}
+covid_plot(calls, "Fraud", "Fraud")
+```
+
+
+Fraud patterns before 2019 seems to decrease within the December to June months. However, over the December to June months in the lockdown period there is an increase of fraud reports with some noticeable noise
+
+
+```{r Hate Incident}
+covid_plot(calls, "Hate Incident", "Hate Incident")
+```
+
+
+Hate incidents follow the general upward trend with no significant difference within the lockdown. Forecasting will allow us to see whether domestic forecasting is part of a longer cycle. 
+
+
+
+```{r Highway Disruption}
+covid_plot(calls, "Highway Disruption", "Highway Disruption")
+```
+
+
+No clear seasonality or trend is present. If anything there is a slight decrease from the start of the lockdown, could be reflective of less people traveling to work due to lockdown restrictions.
+
+
+
+
+```{r Missing Person}
+covid_plot(calls, "Missing Person", "Missing Person")
+```
+
+
+Some noise evident in lockdown period. Why is there such a significant decrease in trend?
+
+
+
+```{r Other -Admin Calls}
+covid_plot(calls, "other - admin", "Admin Calls")
+```
+
+
+No seasonality within the plot but the overall trend follows a decreasing pattern. Arguable slight increase of Admin Calls over the lockdown period. 
+
+
+
+```{r Other - minor}
+covid_plot(calls, "other - minor", "Minor Incident Calls <1000")
+```
+
+
+We see a wide distribution of noise throughout the years but a small decrease in minor calls throughout the lockdown period (including; Absconder/AWOL, Cash Vans In Transit, Hoax Call, Iegal Immigrant, Industrial Accident, Kidnap, Licensing, Natural Disaster, OOF Helicopter Deployment, Other Notifiable Crime, Protest/Demonstration, Transport Incident/Accident, Truancy, Vehicle Pursuit, Warrant Crown Court) 
+
+
+```{r Police Generated}
+covid_plot(calls, "Police Generated", "Police Generated")
+```
+
+
+No noticeable trend or seasonality, but there is an increase in police generated responses from the first reported COVID-19 case with an increased proportion of noise.
+
+
+```{r Breach of Peace}
+covid_plot(calls, "Prevent Potential Breach of the Peace", "Prevent Potential Breach of the Peace")
+```
+
+
+The plot shows random variation with a consistent decreasing amount of reports from around May 2019 up until the first U.K lockdown, the trend then remains relatively flat with further decrease in May 2020. 
+
+
+
+```{r Property Lost/Found}
+covid_plot(calls, "Property Lost/Found", "Property Lost/Found")
+```
+
+
+We see a general decreasing trend with no significant cycle or seasonality. There is some noticeable noise after the first U.k lockdown with majority of plots below the average line. Less people present on streets results in less property to be lost/found
+
+
+
+```{r Road Related Traffic}
+covid_plot(calls, "Road Related Traffic Offence", "Road Related Traffic Offence")
+```
+
+
+The plot shows some cyclical movement that follows a general decreasing rend. Significant noise/outliers are also present within the lockdown period, again this is what we would expect to see as less people were on the roads due to travel restrictions.
+
+
+
+```{r Robbery}
+covid_plot(calls, "Robbery", "Robbery")
+```
+
+
+Some season pattern is present. There is also a general increasing trend up until the start of the lockdown where reports of robbery significantly decrease. This is what we expect to have seen where results are grounded in criminological literature; less opportunity to commit crimes.
+
+
+
+```{r Sexual Offences}
+covid_plot(calls, "Sexual Offences", "Sexual Offences")
+```
+
+
+There is a general increasing trend up until the start of the lockdown where the graph shows some cyclical movement, noise is also present. Reports remained fairly high when the first U.K case was announced but then a significant decrease from the first U.K lockdown. After the first lockdown had ended, the trend follows similar pattern to that of previous years.
+
+
+
+```{r Shoplifting}
+covid_plot(calls, "Shoplifting", "Shoplifting")
+```
+
+
+Overall the graph shows some cyclic movement with reports reflecting some random variation. However, a significant decreases is shown from the start of the pandemic. Again, this is reflective of shops and businesses being closed resulting in less suitable targets and opportunities for shoplifting. However, this could just following the decreasing trend.
+
+
+
+
+```{r Sudden Death}
+covid_plot(calls, "Sudden Death", "Sudden Death")
+```
+
+
+The graph shows seasonal variation, with higher sudden deaths in the winter months. Overall the rate of sudden deaths during the lockdown remain lower than previous years.
+
+
+
+```{r Suspicious Activity}
+covid_plot(calls, "Suspicious Activity", "Suspicious Activity")
+```
+
+
+Overall there is a general decreasing trend of suspicious activity being reported. However, the average increases at the start of the first U.K case. This could be explained by possible reports of people breaking lockdown restrictions. 
+
+
+
+```{r Suspicious Package}
+covid_plot(calls, "Suspicious Package", "Suspicious Package")
+```
+
+
+No significant trend or pattern 
+
+
+
+
+```{r Theft From Motor Vehicle}
+covid_plot(calls, "Theft From Motor Vehicle", "Theft From Motor Vehicle")
+```
+
+
+The data highlights no clear cyclical movement but rather random variation of theft from Motor Vehicles. There is however, a significant decrease in trends from the start of the first U.K case and the first U.K lockdown. This is what we would have expected to see as more people were working from home which reduces the opportunity of theft without being reported.
+
+
+
+
+```{r Theft of Motor Vehicle}
+covid_plot(calls, "Theft Of Motor Vehicle", "Theft Of Motor Vehicle")
+```
+
+
+Results are similar to that of 'theft from motor vechicle ' with a significant decrease over the start of the first U.K case and the first U.K lockdown. There is however, more apparent cyclical movement and noise. 
+
+
+
+```{r Theft Other}
+covid_plot(calls, "Theft Other", "Theft Other")
+```
+
+
+Again, we some some cyclical movement among other theft with a proportional decrease at the start of the lockdown.
+
+
+
+```{r Traffic Collisions}
 covid_plot(calls, "traffic collision", "Road traffic collisions")
 ```
 
 
-```{r}
-covid_plot(calls, "ASB", "Anti-social behaviour")
+The above plot highlights seasonality and cyclical movement throughout the years with a noticeable decline at the the start of lockdown. This could be reflective of the travel restriction over the lockdown which reduced the presence of vehicles on the roads. This could also be supported by the sharp increase of traffic collusion after the first lockdown had been relieved.
+
+
+
+```{r Violence/Harassment}
+covid_plot(calls, "Violence/Harassment", "Violence and Harassment Incidents")
 ```
+
+
+The plot highlights an increasing trend with some cyclical movement. This pattern is subsequently different over the start of the pandemic where there is some noise present
+
+
+
+```{r Warrant/Bail}
+covid_plot(calls, "warrant/bail issue", "Warrant and Bail Incidents")
+```
+
+
+Although the graph follows a steady cyclical movements, there is a questionable reduction in warrant and bail incidents from the start of the pandemic. This could be reflective of a less opportunities to commit breaches.
+
+
+
+
+
+
+# Changes in Proportions of Call Origin Over Time 
+
+In this part of the report, we highlight some simple bivariate descriptors and then highlight the proportion of call types over time.
+
+
+```{r}
+year <- format(as.Date(calls$incident_date_time, format="%d/%m/%Y"),"%Y")
+
+calls_bar <-filter(calls, !is.na(year), !is.na(call_origin))
+calls_bar <- ggplot(data=calls, aes(x=year, fill=call_origin)) + geom_bar(position = "dodge",
+             mapping = aes(y = ..prop.., group = call_origin)) + 
+  ggtitle("Yearly Proportion of Call Origin")
+
+calls_bar + coord_flip()
+
+```
+
+
+Here we see a simple chart that details the proportion of call type over the years. Prior to 2017 the most demanded call origin was ANPR.
+
+Why are NAs preent in 2018-2020? Is this representing the 'unknown choice list value'?    
+
+
+
+```{r}
+calls %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Monthly Proportion of Calls Origin",
+    x = NULL,
+    y = "proportion of call origin",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+Here we have a more detailed graph using a smaller intercept for time. The majority of calls are reported as public non-emergency, followed closely by 999. There is however, a noticeable decline of public non-emergency from around March 2017 to August 2017 where cases dropped from ~60% to ~50% - why is this?
+We can also see a significant spike in public non-emergency incidents following the first U.K lockdown (~65%). This could be as a result of increased reporting of people on the streets breaking lockdown restrictions 
+
+*Public non-emergency = Alarm Company, Email (to Public Contact Mailbox, Helpdesk, Public Non Emergency (inc. Door Phones and PCPs), Single Online Home and Social Media. 
+
+
+
+
+
+# Relationship Between Incident Type and Origin 
+
+The below graphs examine whether there is a difference in what is being reported and how this fluctuates over time within the different origin categories.
+
 
 
 ```{r}
@@ -153,11 +580,313 @@ calls %>%
   scale_y_continuous(labels = scales::percent_format()) +
   scale_fill_brewer(type = "qual") + 
   labs(
-    title = "Calls by origin",
+    title = "Proportion of ASB Incidents by Call Origin",
     x = NULL,
-    y = "proportion of incidents of this type",
+    y = "Proportion of ASB Incidents",
     fill = "call origin"
   ) +
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
+
+
+
+The largest origin type for ASB is that of public-non emergency. Following the first U.K lockdown their is also a significant increase of calls, which would support the literature. Additionally, there is a small but noticeable decrease in calls from the first known U.K case. 
+Fluctuations in ASB calls, especially in the public non-emergency category, highlights a significant relationship between lockdown regulations and the effect on ASB.  
+
+
+
+```{r}
+calls %>% 
+  filter(incident_type %in% c("Concern For Safety")) %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Proportion of Concern for Safety Incidents by Call Origin",
+    x = NULL,
+    y = "Proportion",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+Some noticeable fluctuations in Public Non-Emergency within calls for safety; we see a large increase from the first U.K lockdown. This would also mean that there is less 999 calls being made and could be reflective of a decreased presence of people in everyday routines.
+
+
+
+
+
+```{r}
+calls %>% 
+  filter(incident_type %in% c("Missing Person")) %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Proportion of Missing Person Incidents by Call Origin",
+    x = NULL,
+    y = "Proportion",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+From the graph, it is hard to tell whether the rate of missing persons changed during and around the lockdown As the univariate analyses highlighted a lot of noise, further analysis would be recommended.
+
+
+
+```{r}
+calls %>% 
+  filter(incident_type %in% c("Domestic Incident")) %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Proportion of Domestic Incidents by Origin",
+    x = NULL,
+    y = "Proportion",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+The majority of domestic incident calls are handled by 999 or PNE but the trend seems similar to that of previous years.
+
+
+
+
+ 
+```{r}
+calls %>% 
+  filter(incident_type %in% c("Road Related Traffic Offence")) %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Proportion of Road Related Traffic Offences by Origin",
+    x = NULL,
+    y = "Proportion",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+There is a significant increase in Public Non-Emergency receiving road related traffic offenses from the first U.K lockown. This is interesting because it would assume that either more people are committing traffic offenses or is it just that police were more inclined to report offenses due to the breaking of lockdown regulations and travel restrictions.
+
+
+
+
+
+```{r}
+calls %>% 
+  filter(incident_type %in% c("Violence/Harassment")) %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Proportion of Violence/Harassment Incidents by Call Origin",
+    x = NULL,
+    y = "Proportion",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+Some unequal distribution, with a small spike within the Public Non-Emergency category at the start of the lockdown.
+
+
+
+```{r}
+calls %>% 
+  filter(incident_type %in% c("Complaints Against Police")) %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Proportion of Complaints Against Police Incidents by Call Origin",
+    x = NULL,
+    y = "Proportion",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+Data is not very clear. There is some unequal distribution but it would seem that complaints made against the police do not vary by call origin as the proportion is relatively constant across years. However, the proportion within the lockdown period shows some small differences, including the presence of complaints against police coming from other emergency services. 
+
+
+
+
+```{r}
+calls %>% 
+  filter(incident_type %in% c("Highway Disruption")) %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Proportion of Highway Disruption Incidents by Call Origin",
+    x = NULL,
+    y = "Proportion",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+There seems to be some noticeable propotional change in the call origin for highway disruption, especially after the first U.k lockdown. There is a decline in reports from PNE and 999, and an increase in police generated
+
+
+
+
+```{r}
+calls %>% 
+  filter(incident_type %in% c("Fraud")) %>% 
+  filter(!is.na(call_origin)) %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(call_origin, week) %>% 
+  mutate(call_origin = fct_reorder(call_origin, n)) %>% 
+  ggplot(aes(x = week, y = n, fill = call_origin)) +
+  geom_area(position = "fill") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual") + 
+  labs(
+    title = "Proportion of Fraud Incidents by Origin",
+    x = NULL,
+    y = "Proportion",
+    fill = "call origin"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+
+
+Interestingly there seems to be an increase in the reports of Fraud over from PNE. Although the spike is relatively larger following the the first U.K lockdwon, this could however, be a result of seasonality. 
+
+
+
+
+
+
+#Concluding Thoughts
+
+This data gives an insight into the changing proportions of incident types and call origin over a 5 year period, with the additional focus on the changes in report statistics within the lockdown period.  The plots that represent violent crimes would coincide with new literature supporting the change in crime patterns as a result of lockdown regulations/restrictions. Non-crime trends however, need further examination supported by the presence of noise and random variation within the plots. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
