@@ -1,8 +1,10 @@
 ---
 title: "Reports of Incident Types and Call Origin to Cheshire"
-author: "Matthew P J Ashby"
-date: "26/02/2021"
-output: html_document
+author: "Nadia Kennar, Matthew P J Ashby, Reka Solymosi"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  word_document: default
+  html_document: default
 ---
 
 This paper examines both the changes in incident types and the changes of call types over time using calls-for-service provided by Cheshire Police. Using data from 2015 to 2020, time series plots were created in order to analysis trends among the first U.K lockdown. 
@@ -18,7 +20,8 @@ library(tidyverse)
 ```
 
 ```{r load_data, include=FALSE}
-calls <- read_csv("Z:\\n8_data.csv.gz")
+# calls <- read_csv("Z:\\n8_data.csv.gz")
+calls <- read_csv("/Volumes/n8_covid/n8_data.csv.gz")
 
 minor_categories <- calls %>% 
   count(incident_type) %>% 
@@ -542,7 +545,8 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") + 
+  guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -586,7 +590,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -621,7 +625,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -656,7 +660,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -689,7 +693,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -724,7 +728,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -759,7 +763,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -792,7 +796,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -826,7 +830,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
@@ -860,7 +864,7 @@ calls %>%
     fill = "call origin"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=2,byrow=TRUE))
 ```
 
 
