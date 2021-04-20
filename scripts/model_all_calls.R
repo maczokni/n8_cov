@@ -68,14 +68,15 @@ count_all_calls <- calls %>%
   # in-fact are) partial weeks containing fewer than seven days, meaning those
   # 'weekly' call counts are artificially low.
   slice(2:(n() - 1)) %>% 
+  as_tsibble(index = incident_week) %>% 
+  fill_gaps(call_count = 0) %>% 
   # Add dummy variables
   mutate(
     # Dummy for change from old to new call-handling system
-    new_system = incident_week > yearweek(ymd("2018-01-01")), # PUT REAL DATE HERE
+    new_system = incident_week > yearweek(ymd("2017-06-03")),
     # Dummy for changes in practice after adverse HMIC call-handling report
-    hmic_changes = incident_week > yearweek(ymd("2019-01-01")) # PUT REAL DATE HERE
-  ) %>% 
-  as_tsibble(index = incident_week)
+    hmic_changes = incident_week > yearweek(ymd("2017-05-15"))
+  )
 
 # Model weekly call counts
 # The model is based only on calls from before the first UK COVID case on 31
