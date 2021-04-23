@@ -82,10 +82,8 @@ count_all_calls <- calls %>%
 # The model is based only on calls from before the first UK COVID case on 31
 # January 2021
 model_all_calls <- count_all_calls %>% 
-  filter(
-    incident_type_new %in% c("Domestic Incident", "Missing Person"),
-    incident_week < yearweek(ymd("2020-01-31"))
-  ) %>% 
+  # If you only want to model certain types of call, add a `filter()` here
+  filter(incident_week < yearweek(ymd("2020-01-31"))) %>% 
   model(
     arima = ARIMA(call_count ~ trend() + season() + new_system + hmic_changes)
   )
@@ -97,7 +95,8 @@ model_all_calls <- count_all_calls %>%
 # do. The variable names must match those in the original data and therefore the
 # names of the model terms, excluding `trend()` and `season()`, which are
 # handled automatically.
-fdata_all_calls <- tibble(
+fdata_all_calls <- expand_grid(
+  incident_type_new  = unique(model_all_calls$incident_type_new),
   incident_week = yearweek(seq.Date(
     from = ymd("2020-01-31"), 
     to = ymd("2020-12-31"),
@@ -106,7 +105,7 @@ fdata_all_calls <- tibble(
   new_system = TRUE,
   hmic_changes = TRUE
 ) %>% 
-  as_tsibble(index = incident_week)
+  as_tsibble(index = incident_week, key = incident_type_new)
 
 # Create forecasts and extract confidence intervals
 forecast_all_calls <- model_all_calls %>% 
@@ -118,10 +117,17 @@ forecast_all_calls <- model_all_calls %>%
 # Join actual counts to the forecast object and check if actual calls were 
 # outside the forecast range
 final_all_calls <- count_all_calls %>% 
-  filter(incident_week > yearweek(ymd("2019-12-31"))) %>% 
+  filter(
+    incident_type_new %in% unique(model_all_calls$incident_type_new),
+    incident_week > yearweek(ymd("2019-12-31"))
+  ) %>% 
   select(incident_week, actual_calls = call_count) %>% 
-  full_join(forecast_all_calls, by = "incident_week") %>% 
+  full_join(
+    forecast_all_calls, 
+    by = c("incident_type_new", "incident_week")
+  ) %>% 
   select(
+    incident_type_new,
     incident_week, 
     actual_calls, 
     forecast_mean = mean, 
@@ -138,56 +144,5 @@ final_all_calls <- count_all_calls %>%
   ) %>% 
   replace_na(list(sig = FALSE))
 
-
-
-# Create an example plot -------------------------------------------------------
-
-# Note important dates
-# Source: https://www.instituteforgovernment.org.uk/sites/default/files/timeline-lockdown-web.pdf
-dates <- tribble(
-  ~date, ~event,
-  "2020-01-31", "first UK COVID case",
-  "2020-03-23", "first lockdown begins",
-  "2020-06-15", "first lockdown ends",
-  "2020-11-05", "second lockdown begins",
-  "2020-12-02", "second lockdown ends"
-) %>% 
-  mutate(
-    date = as_date(yearweek(ymd(date))), 
-    row = row_number(),
-    label = str_glue("{row}. {event}")
-  )
-
-# Create plot
-ggplot(final_all_calls) +
-  # Forecast
-  geom_ribbon(
-    aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
-    na.rm = TRUE,
-    alpha = 0.5, 
-    fill = "grey80"
-  ) +
-  geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
-  # Dates of interest
-  geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
-  geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
-  # Actual calls
-  geom_line(aes(incident_week, actual_calls)) +
-  geom_point(aes(incident_week, actual_calls, fill = sig), shape = 21) +
-  scale_x_date(date_breaks = "1 month", date_labels = "%e %b\n%Y") +
-  scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
-  scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
-  labs(
-    title = "Calls for service during 2021 compared to pre-pandemic forecast",
-    subtitle = str_wrap(
-      str_glue("Events by week: ", str_c(pull(dates, label), collapse = "; ")), 
-      80
-    ),
-    caption = "Forecast calculated using data up to 31 January 2020",
-    x = NULL,
-    y = "weekly count of calls for service",
-    fill = "actual calls significantly different from forecast"
-  ) +
-  theme_minimal() +
-  theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
-
+# Save result for use elsewhere (e.g. in an Rmarkdown document)
+write_rds(final_all_calls, here::here("output/call_forecasts.Rds"))
