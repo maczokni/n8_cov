@@ -61,14 +61,14 @@ calls <- mutate(
 # Count weekly calls, add dummy variables and convert to a tsibble object
 count_all_calls <- calls %>% 
   mutate(incident_week = yearweek(incident_date_time)) %>% 
-  count(incident_week, name = "call_count") %>% 
+  count(incident_type_new, incident_week, name = "call_count") %>% 
   # Remove the first and last weeks from the data because weeks are defined as
   # being seven days starting on a Monday so weeks are sometimes split across
   # years. This means that at the start and end of the data there might be (and
   # in-fact are) partial weeks containing fewer than seven days, meaning those
   # 'weekly' call counts are artificially low.
   slice(2:(n() - 1)) %>% 
-  as_tsibble(index = incident_week) %>% 
+  as_tsibble(index = incident_week, key = incident_type_new) %>% 
   fill_gaps(call_count = 0) %>% 
   # Add dummy variables
   mutate(
@@ -81,10 +81,14 @@ count_all_calls <- calls %>%
 # Model weekly call counts
 # The model is based only on calls from before the first UK COVID case on 31
 # January 2021
-model_all_calls <- model(
-  .data = filter(count_all_calls, incident_week < yearweek(ymd("2020-01-31"))), 
-  arima = ARIMA(call_count ~ trend() + season() + new_system + hmic_changes)
-)
+model_all_calls <- count_all_calls %>% 
+  filter(
+    incident_type_new %in% c("Domestic Incident", "Missing Person"),
+    incident_week < yearweek(ymd("2020-01-31"))
+  ) %>% 
+  model(
+    arima = ARIMA(call_count ~ trend() + season() + new_system + hmic_changes)
+  )
 
 # Create data for forecasting
 # This step is necessary because the model contains dummy variables, so we have
