@@ -74,8 +74,422 @@ forecast_chart <- function (forecasts, types) {
 ```
 
 
-# Missing persons
 
-```{r}
+
+
+
+
+#Abondended Phone Call
+
+```{r Abandoned}
+forecast_chart(call_forecasts, "Abandoned Phone Call")
+```
+
+Majority of calls are significantly different from the forecast data.
+
+
+
+
+
+#Admin
+
+```{r Admin}
+forecast_chart(call_forecasts, "Advice/Directions/Admin")
+```
+Nine time periods fall above of the conifdence intervals, mainly following the first UK lockdown
+
+
+
+#Alarms
+
+```{r Alarms}
+forecast_chart(call_forecasts, "alarms")
+```
+
+Some significant differences between forecast data
+
+
+#Widlife Concern
+
+```{r Wildlife}
+forecast_chart(call_forecasts, "animals")
+```
+
+Two points could be considered significantly different from the forecast 
+
+
+#ASB
+
+```{r ASB}
+forecast_chart(call_forecasts, "ASB")
+```
+
+
+Over 20 point are considered signifcantly different form the forecast data as expected, mainly following the first lockdown and second lockdown. Supports literature with increase in ASB due to breaking restriction rules. Interesting to note the reduction of points outside the confidence intervals from the first lockdown to the second lockdown. 
+
+
+
+#Burglary - Commercial
+
+```{r Burglary - Commercial}
+forecast_chart(call_forecasts, "Burglary - Business/Commercial")
+```
+
+General decrease of commercial calls with noticable difference following the first lockdown ending 
+
+
+#Burglary - Residential
+
+```{r Burglary - Residential}
+forecast_chart(call_forecasts, "Burglary - Residential")
+```
+
+Majority of the calls are significantly different form the forecast, with a sharper reduction at the end of the second lockdown period 
+
+
+#Civil Disputes
+
+```{r Civil Disputes}
+
+forecast_chart(call_forecasts, "Civil Disputes")
+```
+
+Actual calls are general lower than the forecast data but nothing too noticable as only one point is signifcantly different from the forecast
+
+
+#Police Safety 
+
+```{r Police Safety}
+
+forecast_chart(call_forecasts, "Code Zero")
+```
+
+
+Sharp spikes of siginifcance difference among each time period, constrasts siginficantly to forecasted seasonality 
+
+
+#Minor Injuries 
+
+```{r Minor Injuries}
+
+forecast_chart(call_forecasts, "Collapse/Illness/Injury/Trapped")
+```
+
+Why are confidence intervals missing?
+
+
+
+#Complaints Against Police
+
+```{r Compaints Against Police}
+
+forecast_chart(call_forecasts, "Complaints Against Police")
+```
+
+Actual calls tend to typically not differ too much from the forecast data. However, with those that do we see 5 points below the confidence intervals before the first lockdown ends and then 2 points higher than the confidence intervals after the seocnd lockdown begins 
+
+
+
+#Concern for Safety 
+
+```{r Concern For Safety}
+forecast_chart(call_forecasts, "Concern For Safety")
+```
+
+
+Actual calls from conerns of saftey fall below the lower 95% CIs during the first lockdown, but then increase as restrictions are relieved, 
+
+
+
+#Criminal Damage 
+
+```{r Criminal Damage}
+forecast_chart(call_forecasts, "Criminal Damage")
+```
+
+
+Following the first lockdown, actual calls of criminal damage are significantly different from the forecast falling below the lower 95% CIs.
+
+
+
+#Distraction Burglary
+
+
+```{r Distraction Burglary}
+forecast_chart(call_forecasts, "Distraction Burglary")
+```
+
+
+No plot produced - error message 'Error in unit(x, default.units) : 'x' and 'units' must have length > 0'
+
+
+
+
+
+#Domestic Incident
+
+```{r Domestic Incident}
+forecast_chart(call_forecasts, "Domestic Incident")
+```
+
+Overall the actual calls for domestic incident fall above the upper bound of the 95% CI, mainly following the start of the first lockdown. This is reflective of literature with more people remaining at home
+
+
+
+
+#Drug Related Offences 
+
+
+```{r Drug Related Offences}
+forecast_chart(call_forecasts,"Drugs")
+```
+
+
+During the start of the first UK lockdown there is a significant increase of drug related offenses. Moreover, where we expect to see a spike during the first lockdown ending, there is in fact a significant decrease of crime.
+
+
+#Firearms 
+
+
+```{r Firearms}
+forecast_chart(call_forecasts, "firearms")
+```
+
+Overall, no significant differences in firearms offenses (some exception following stage 2). However, the overal patterns of actual crimes seems to differ from the forecast trend within the upper and lower bounds of the confidence intervals.
+
+
+#Fraud
+
+
+```{r Fraud}
+forecast_chart(call_forecasts,"Fraud")
+```
+
+9 time points are seen as significantly different from the forecast, happening from the first UK Covid case up until the ending of the first lockdown. Most of these points fall below the lower bound of the CIs, could be reflective of less opportunity for Fraud to happen given the closures of retails and businesses 
+
+
+#Hate Incident 
+
+
+```{r Hate Incident}
+forecast_chart(call_forecasts,"Hate Incident")
+```
+
+During the the first UK covid case and the first lockdown, there are two points above the forecasted data. There is also a general increase of hate incidents (withtin the CIs but still high) following the fist lockdown ending - reflective of increasd biased and prejudice to Asian communities,
+
+
+
+#Highway Disruption 
+
+```{r Highway Disruption}
+forecast_chart(call_forecasts,"Highway Disruption")
+```
+
+Siginificantly lower levels of highway disruption from the first lockdown as a result of less people travelling. Also supported by the small increase after the first lockdown ended (3)
+
+
+
+
+#Missing Person 
+
+```{r Missing Person}
 forecast_chart(call_forecasts, "Missing Person")
 ```
+
+Significant differences again following the first lockdown. Supported by literature with more children being at home and less opportunity for 'juvenile runaways' but also for high risk individuals
+
+
+#Other - Admin Calls
+
+```{r Other -Admin Calls}
+forecast_chart(call_forecasts,"other - admin")
+```
+
+Small changes to admin calls following the first lockdown as expected with a decrease of weekly calls. However, typically the trends follows the overal forecast pattern
+
+
+#Other - minor 
+
+
+```{r Other - minor}
+forecast_chart(call_forecasts, "other - minor")
+```
+
+
+Actual calls generally fall below the forecasted data as expected. However there is one increased signifcant difference following the second lockdwon ending
+
+ 
+#Police Generated 
+
+```{r Police Generated}
+forecast_chart(call_forecasts, "Police Generated")
+```
+
+Interestingly, actual calls from police generated calls fall above the confidence interval throughout all 5 key dates. 
+
+
+
+#Potential Breach of the Peace
+
+
+```{r Breach of Peace}
+forecast_chart(call_forecasts,"Prevent Potential Breach of the Peace")
+```
+
+Actual calls of potential breach of peace are much lower than the forecasted data. This makes sense due to changes in peoples daily routine resulting in less opportunity to causes alarm and threat to the community 
+
+
+
+#Property Lost/Found 
+
+
+```{r Property Lost/Found}
+forecast_chart(call_forecasts,"Property Lost/Found")
+```
+
+
+
+#Road Related Traffic Offence
+
+```{r Road Related Traffic}
+forecast_chart(call_forecasts,"Road Related Traffic Offence")
+```
+
+Actual calls of road related traffic offences fall far below the forecasted data. Again, this is expected due to less people traveling during the restrictions put in place. However, could also be due to less officers working as result having the virus.
+
+#Robbery 
+
+```{r Robbery}
+forecast_chart(call_forecasts, "Robbery")
+```
+
+
+During time period one, there was a high spike in actual calls of robbery where the first UK covid case happened - why is this? We also see a break in the seasonality and more random fluctuations throughout the five key dates 
+
+
+#Sexual Offences
+
+
+```{r Sexual Offences}
+forecast_chart(call_forecasts, "Sexual Offences")
+```
+
+
+During the first lockdown cases of sexual offences decreased and fell below the 95% confidence intervals, trends however return to normal follwoing the end of the lockdown. Interesting to note that this pattern somewhat consistent across the second lockdown with a decreasing trend, however the drop is not as prominent as it is seen in the first lockdown - restrictions possibly broken more regulary 
+
+
+
+
+
+#Shoplifitng
+
+```{r Shoplifting}
+forecast_chart(call_forecasts, "Shoplifting")
+```
+
+Significant differences following the first lockdown as would be expected due to closure of retail and buisnesses. Arguably different seaonality patterns as well 
+
+
+#Sudden Death 
+
+```{r Sudden Death}
+forecast_chart(call_forecasts, "Sudden Death")
+```
+
+Two time periods are seen as significantly differnt from the forecast which happens at the start of the first UK lockdown, this could be as a result of increase Coronavirus cases or reduced information around the virus, Results tend to fall back to normal soon after.
+
+
+
+#Suspicious Activity 
+
+```{r Suspicious Activity}
+forecast_chart(call_forecasts, "Suspicious Activity")
+```
+
+No significant differnces in suspicious activity calls.
+
+
+
+#Suspicious Package 
+
+```{r Suspicious Package}
+forecast_chart(call_forecasts, "Suspicious Package")
+```
+
+Arguable differences in actual calls compared to forecast data - why is that point 'true' even though its within the confidence intervals in time period 3?
+
+
+
+#Theft from Motor Vehicle
+
+```{r Theft From Motor Vehicle}
+forecast_chart(call_forecasts, "Theft From Motor Vehicle")
+```
+
+General decrease in theft from motor vehicle following the first UK lockdown. This is as expected with more people working from home and possibly increased home security.
+
+
+
+#Theft of Motor Vehicle 
+
+
+```{r Theft of Motor Vehicle}
+forecast_chart(call_forecasts, "Theft Of Motor Vehicle")
+```
+
+General decrease of motor theft following the first uk lockdown. However, trends seem to follow the same seaonsal pattern just at a lower weekly rate 
+
+
+#Theft Other 
+
+```{r Theft Other}
+forecast_chart(call_forecasts, "Theft Other")
+```
+
+General decrease of theft other following the first uk lockdown 
+
+
+#Traffic collision
+
+```{r Traffic Collisions}
+forecast_chart(call_forecasts, "traffic collision")
+```
+
+General decrease following the first lockdown, trends seems to increase soon after but still can be considered significantly different from the forecast data 
+
+
+#Violence and Harassment Incidents 
+
+```{r Violence/Harassment}
+forecast_chart(call_forecasts, "Violence/Harassment")
+```
+
+Following the first lockdown there is a general decrease of violence and harassment compared to the forecast data
+
+
+#Warrant and Bail Incidents 
+
+
+```{r Warrant/Bail}
+forecast_chart(call_forecasts, "warrant/bail issue")
+```
+
+
+Nothing too significant to note here, general decrease of calls compared to the forecast data as expected.
+
+
+
+
+
+Concluding Thoughts; Most significant changes in calls happen following the first U.K lockdown, these patterns of change are also reflected in the second lockdown but at a much lower rate. 
+
+Some errors: 
+- no plots produces for distraction burglary and property/lost found 
+- confidence intervals look different in minor injuries 
+
+
+
+
+
+
+
