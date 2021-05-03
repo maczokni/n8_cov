@@ -1,0 +1,132 @@
+---
+title: "forecast_origin_plots"
+author: "Nads"
+date: "28/04/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, echo = FALSE, include = TRUE)
+
+library(lubridate)
+library(tidyverse)
+library(tsibble)
+```
+
+
+##By inidivdual Catergory 
+
+```{r load data, include=FALSE}
+call_forecasts <- read_rds(here::here("output/call_origin_forcasts.Rds"))
+
+# Note important dates
+# Source: https://www.instituteforgovernment.org.uk/sites/default/files/timeline-lockdown-web.pdf
+dates <- tribble(
+  ~date, ~event,
+  "2020-01-31", "first UK COVID case",
+  "2020-03-23", "first lockdown begins",
+  "2020-06-15", "first lockdown ends",
+  "2020-11-05", "second lockdown begins",
+  "2020-12-02", "second lockdown ends"
+) %>% 
+  mutate(
+    date = as_date(yearweek(ymd(date))), 
+    row = row_number(),
+    label = str_glue("{row}. {event}")
+  )
+```
+
+
+
+```{r create chart function, include=FALSE}
+forecast_chart <- function (forecasts, types) {
+  
+  forecasts %>% 
+    filter(call_origin %in% types) %>% 
+    ggplot() +
+    # Forecast
+    geom_ribbon(
+      aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+      na.rm = TRUE,
+      alpha = 0.5, 
+      fill = "grey80"
+    ) +
+    geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+    # Actual calls
+    geom_line(aes(incident_week, actual_calls)) +
+    geom_point(aes(incident_week, actual_calls, fill = sig), shape = 21) +
+    scale_x_date(date_labels = "%e %b\n%Y") +
+    scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+    scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+    labs(
+      title = "Calls for service during 2021 compared to pre-pandemic forecast",
+      subtitle = str_wrap(
+        str_glue("Events by week: ", str_c(pull(dates, label), collapse = "; ")), 
+        80
+      ),
+      caption = "Forecast calculated using data up to 31 January 2020",
+      x = NULL,
+      y = "weekly count of calls for service",
+      fill = "actual calls significantly different from forecast"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+  
+}
+```
+
+
+
+#Other Emergency Services 
+
+```{r OES}
+forecast_chart(call_forecasts, "other emergency services")
+```
+
+
+#Police Generated
+
+```{r Police Generated}
+forecast_chart(call_forecasts, "police generated")
+```
+
+
+#Public Non-Emergency 
+
+```{r Public Non-Emergency}
+forecast_chart(call_forecasts, "public non-emergency")
+```
+
+
+#ANPR
+
+```{r ANPR}
+forecast_chart(call_forecasts, "ANPR")
+```
+
+#999
+
+```{r 999}
+forecast_chart(call_forecasts, "999")
+```
+
+
+
+
+
+
+
+
+
+
+##By Groups
+
+
+
+
+
+
+
