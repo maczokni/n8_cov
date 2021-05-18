@@ -19,6 +19,8 @@ minor_categories <- calls %>%
 calls <- mutate(
   calls,
   incident_type_new = case_when(
+    incident_type %in% c("Distraction Burglary") ~
+      "Burglary - Residential",
     incident_type %in% c(
       "Assistance to Other Agencies",
       "CRB Use Only",
@@ -62,6 +64,7 @@ calls <- mutate(
 count_all_calls <- calls %>% 
   mutate(incident_week = yearweek(incident_date_time)) %>% 
   count(incident_type_new, incident_week, name = "call_count") %>% 
+  #count(call_origin, incident_weekm name = "call_count")   - for call origin forecasts!
   # Remove the first and last weeks from the data because weeks are defined as
   # being seven days starting on a Monday so weeks are sometimes split across
   # years. This means that at the start and end of the data there might be (and
@@ -105,7 +108,8 @@ fdata_all_calls <- expand_grid(
   new_system = TRUE,
   hmic_changes = TRUE
 ) %>% 
-  as_tsibble(index = incident_week, key = incident_type_new)
+  as_tsibble(index = incident_week, key = incident_type_new) 
+                                    #key = call_origin
 
 # Create forecasts and extract confidence intervals
 forecast_all_calls <- model_all_calls %>% 
@@ -146,3 +150,7 @@ final_all_calls <- count_all_calls %>%
 
 # Save result for use elsewhere (e.g. in an Rmarkdown document)
 write_rds(final_all_calls, here::here("output/call_forecasts.Rds"))
+write_rds(final_all_calls, here::here("output/call_origin_forcasts"))
+
+
+
