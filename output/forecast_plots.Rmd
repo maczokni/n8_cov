@@ -1,6 +1,11 @@
 ---
+<<<<<<< HEAD
 title: "Calls for Service During 2021 Compared to Pre-Pandemic Forecast - Incident Type"
 author: "Matt Ashby, Nadia Kennar, Reka Solymosi"
+=======
+title: "Forecast plots"
+author: ""
+>>>>>>> 66daf9f9215f9c9cca61914038f2417166f633e5
 date: "23/04/2021"
 output: html_document
 ---
