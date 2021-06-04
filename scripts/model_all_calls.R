@@ -80,8 +80,10 @@ count_all_calls <- calls %>%
     # Dummy for change from old to new call-handling system
     new_system = incident_week > yearweek(ymd("2017-06-03")),
     # Dummy for changes in practice after adverse HMIC call-handling report
-    hmic_changes = incident_week > yearweek(ymd("2017-05-15"))
-  )
+    hmic_changes = incident_week > yearweek(ymd("2017-05-15")), 
+    # Dummy for bank holiday 
+    bank_holiday = incident_week %in% yearweek(as_date(timeDate::holidayLONDON(year = 2015:2020))))
+
 
 # Model weekly call counts
 # The model is based only on calls from before the first UK COVID case on 31
@@ -90,8 +92,10 @@ model_all_calls <- count_all_calls %>%
   # If you only want to model certain types of call, add a `filter()` here
   filter(incident_week < yearweek(ymd("2020-01-31"))) %>% 
   model(
-    arima = ARIMA(call_count ~ trend() + season() + new_system + hmic_changes)
+    arima = ARIMA(call_count ~ trend() + season() + new_system + hmic_changes + bank_holiday)
   )
+
+
 
 # Create data for forecasting
 # This step is necessary because the model contains dummy variables, so we have
@@ -112,13 +116,14 @@ fdata_all_calls <- expand_grid(
 ) %>% 
   as_tsibble(index = incident_week, key = incident_type_new) 
                                     #key = call_origin
-
+fdata_all_calls$bank_holiday <- fdata_all_calls$incident_week %in% yearweek(as_date(timeDate::holidayLONDON(year = 2020)))
 # Create forecasts and extract confidence intervals
 forecast_all_calls <- model_all_calls %>% 
   forecast(new_data = fdata_all_calls) %>% 
   hilo(level = 95) %>% 
   janitor::clean_names() %>% 
-  unpack_hilo(cols = x95_percent)
+  unpack_hilo(cols = x95_percent) 
+
 
 # Join actual counts to the forecast object and check if actual calls were 
 # outside the forecast range
@@ -152,7 +157,7 @@ final_all_calls <- count_all_calls %>%
 
 # Save result for use elsewhere (e.g. in an Rmarkdown document)
 write_rds(final_all_calls, here::here("output/call_forecasts.Rds"))
-write_rds(final_all_calls, here::here("output/call_origin_forcasts"))
+
 
 
 
