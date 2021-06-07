@@ -63,7 +63,8 @@ forecast_chart <- function (forecasts, types) {
     # Actual calls
     geom_line(aes(incident_week, actual_calls)) +
     geom_point(aes(incident_week, actual_calls, fill = sig), shape = 21) +
-    scale_x_date(date_labels = "%e %b\n%Y") +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+                 limits = as.Date(c("2020-01-06", "2020-12-21"))) +
     scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
     scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
     labs(
@@ -132,6 +133,13 @@ No noticeable difference between actual calls and forecast - ?
 ```{r 999}
 forecast_chart(call_forecasts, "999")
 ```
+
+
+
+
+
+
+
 
 Calls to 999 received pre-pandemic are higher than those actual actual received during the pandemic. This would be expected with reduced opportunities to commit crimes and therefore less crimes to report. However, there is no clear noticeable trend in the changes as unsure if these changes would be expected?
 

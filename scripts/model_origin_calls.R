@@ -130,8 +130,9 @@ fdata_all_calls <- expand_grid(
   hmic_changes = TRUE
 ) %>% 
   as_tsibble(index = incident_week, key = call_origin) 
-fdata_all_calls$bank_holiday <- fdata_all_calls$incident_week %in% yearweek(as_date(timeDate::holidayLONDON(year = 2020)))
-#key = call_origin
+
+fdata_all_calls$bank_holiday <- fdata_all_calls$incident_week %in% 
+  yearweek(as_date(timeDate::holidayLONDON(year = 2020)))
 
 # Create forecasts and extract confidence intervals
 forecast_all_calls <- model_all_calls %>% 
