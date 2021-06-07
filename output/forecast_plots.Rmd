@@ -1,11 +1,6 @@
 ---
-<<<<<<< HEAD
 title: "Calls for Service During 2021 Compared to Pre-Pandemic Forecast - Incident Type"
 author: "Matt Ashby, Nadia Kennar, Reka Solymosi"
-=======
-title: "Forecast plots"
-author: ""
->>>>>>> 66daf9f9215f9c9cca61914038f2417166f633e5
 date: "23/04/2021"
 output: html_document
 ---
@@ -20,6 +15,7 @@ library(tsibble)
 
 ```{r load data, include=FALSE}
 call_forecasts <- read_rds(here::here("output/call_forecasts.Rds"))
+#call_forecasts <- read_rds("Z:\\call_forecasts.Rds")
 
 # Note important dates
 # Source: https://www.instituteforgovernment.org.uk/sites/default/files/timeline-lockdown-web.pdf
@@ -65,7 +61,8 @@ forecast_chart <- function (forecasts, types) {
     # Actual calls
     geom_line(aes(incident_week, actual_calls)) +
     geom_point(aes(incident_week, actual_calls, fill = sig), shape = 21) +
-    scale_x_date(date_labels = "%e %b\n%Y") +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+                 limits = as.Date(c("2020-01-06", "2020-12-21"))) +
     scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
     scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
     labs(
