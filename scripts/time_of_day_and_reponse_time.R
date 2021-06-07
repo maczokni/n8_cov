@@ -3,8 +3,10 @@ library(tsibble)
 library(tidyverse)
 
 # reka path
-calls <- read_csv("/Volumes/n8_covid/n8_data.csv.gz") %>% # USE CORRECT PATH FOR CLEAN DATA FILE ON YOUR COMPUTER
-  janitor::clean_names()
+# calls <- read_csv("/Volumes/n8_covid/n8_data.csv.gz") %>% # USE CORRECT PATH FOR CLEAN DATA FILE ON YOUR COMPUTER
+#   janitor::clean_names()
+
+calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
 
 # create a "time of day" variable
 calls$hour <- hour(ymd_hms(calls$incident_date_time))
@@ -31,7 +33,7 @@ calls %>%
   scale_y_continuous(labels = scales::percent_format()) +
   scale_fill_brewer(type = "qual") + 
   labs(
-    title = "Proportion of Concern for Safety Incidents by Time of Day",
+    title = "Proportion of all Incidents by Time of Day",
     x = NULL,
     y = "Proportion",
     fill = "Time of Day"
@@ -70,6 +72,12 @@ calls %>%
   theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
 
 
+# number attended by week 
+
+calls %>% 
+  mutate(week = as_date(yearweek(incident_date_time))) %>% 
+  count(attended, week)
+
 # filter attended only 
 
 attended_calls <- calls %>% filter(attended == "Yes")
@@ -80,6 +88,10 @@ attended_calls$response_time <- as.period(ymd_hms(attended_calls$earliest_arrive
                                      ymd_hms(attended_calls$earliest_deployed_date_time))
 
 mean(time_length(attended_calls$response_time, unit = "minute"), na.rm = TRUE)
+min(time_length(attended_calls$response_time, unit = "minute"), na.rm = TRUE)
+max(time_length(attended_calls$response_time, unit = "minute"), na.rm = TRUE)
 
-
+ggplot(attended_calls, aes(time_length(response_time, unit = "minute"))) + 
+  geom_density() + 
+ scale_x_log10()
 
