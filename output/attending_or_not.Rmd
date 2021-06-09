@@ -13,7 +13,7 @@ library(tsibble)
 library(tidyverse)
 
 
-calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
+#calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
 all_calls_attended_forecast <- read_rds(here::here("output/all_attended_forecasts.Rds"))
 by_type_attended_forecast <- read_rds(here::here("output/by_type_attended_forecasts.Rds"))
 
@@ -60,7 +60,8 @@ forecast_chart <- function (forecasts, types) {
     # Actual calls
     geom_line(aes(incident_week, actual_attended)) +
     geom_point(aes(incident_week, actual_attended, fill = sig), shape = 21) +
-    scale_x_date(date_labels = "%e %b\n%Y") +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+                 limits = as.Date(c("2020-01-06", "2020-12-21"))) +
     scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
     scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
     labs(
