@@ -1,0 +1,434 @@
+---
+title: "Calls vs IMD"
+author: "NK MA RS"
+date: "08/06/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Load packages
+library(fable)
+library(lubridate)
+library(tsibble)
+library(tidyverse)
+library(readxl)
+
+# Read and clean data
+
+# excel_sheets("File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx")
+# imd <- read_xlsx(here::here("File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx", sheet = "IMD2019"))  %>%  janitor::clean_names()
+
+imd <- read_xlsx("C:\\Users\\maczo\\Desktop\\research\\n8_cov\\File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx", sheet = "IMD2019") %>%  janitor::clean_names()
+
+calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
+
+minor_categories <- calls %>% 
+  count(incident_type) %>% 
+  filter(n < 1000) %>% 
+  pull(incident_type)
+
+# Categorise calls
+calls <- mutate(
+  calls,
+  incident_type_new = case_when(
+    incident_type %in% c("Distraction Burglary") ~
+      "Burglary - Residential",
+    incident_type %in% c(
+      "Assistance to Other Agencies",
+      "CRB Use Only",
+      "CSI To Be Informed",
+      "External System",
+      "Found Stolen Vehicle",
+      "Message to Pass/OOF Enquiries",
+      "PNC Markers",
+      "Police Vehicle Recovery",
+      "Pre-Planned Events",
+      "Stop Search",
+      "Training"
+    ) ~ "other - admin",
+    incident_type %in% c(
+      "Alarm - Activation", 
+      "Alarm - No Response", 
+      "Audible Only Alarm",
+      "Insecure Premises",
+      "Police Installed Alarm",
+      "Unauthorised Encampment"
+    ) ~ "alarms",
+    incident_type %in% c(
+      "Bail Breaches/Wanted Person",
+      "Bail/Curfew/Wanted",
+      "Prison Licence Recall",
+      "Warrant Crown Court"
+    ) ~ "warrant/bail issue",
+    incident_type %in% c("Domestic Animal Concern", "Wildlife Matters") ~ 
+      "animals",
+    incident_type %in% c(
+      "Firearms - Non Notifiable Crime",
+      "Firearms Involved Crime"
+    ) ~ "firearms",
+    incident_type %in% c("RTC", "RTC - Damage Only") ~ "traffic collision",
+    incident_type %in% minor_categories ~ "other - minor",
+    TRUE ~ incident_type
+  )
+)
+
+plot_imd <- function(inc_type) {
+  
+  type_df <- calls %>% filter(incident_type_new == inc_type)
+  
+  type_calls <- type_df %>% group_by(lsoa) %>% count() %>% 
+    left_join(., imd, by = c("lsoa" =  "lsoa_name_2011")) 
+  
+  labs_df <- type_calls %>% group_by(index_of_multiple_deprivation_imd_decile) %>% count()
+  
+ p <-  ggplot(type_calls %>% filter(!is.na(index_of_multiple_deprivation_imd_decile)), aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n )) + 
+    geom_boxplot() + 
+    geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = 50000, label = paste0("n = ",n))) + 
+    scale_y_log10() + 
+    labs(title = paste0(inc_type, " calls from LSOAs in each IMD decile 2015-2020")) + 
+    xlab("IMD decile (1 = most and 10 = least deprived)") + 
+    ylab(paste0("Number of ",inc_type," calls")) + 
+    theme_bw()
+ 
+ return(p)
+  
+}
+
+```
+
+
+## Total calls by IMD decile
+
+```{r}
+
+total_calls <- calls %>% group_by(lsoa) %>% count() %>% 
+  left_join(., imd, by = c("lsoa" =  "lsoa_name_2011")) 
+
+labs_df <- total_calls %>% group_by(index_of_multiple_deprivation_imd_decile) %>% count()
+
+ggplot(total_calls %>% filter(!is.na(index_of_multiple_deprivation_imd_decile)), aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n )) + 
+  geom_boxplot() + 
+  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = 50000, label = paste0("n = ",n))) + 
+  scale_y_log10() + 
+  labs(title = "Total calls from LSOAs in each IMD decile 2015-2020") + 
+  xlab("IMD decile (1 = most and 10 = least deprived)") + 
+  ylab("Number of calls (all types)") + 
+  theme_bw()
+
+
+```
+
+
+## Same but by call type
+
+## Admin
+
+```{r Admin}
+plot_imd("Advice/Directions/Admin")
+```
+
+
+## Alarms
+
+```{r Alarms}
+plot_imd("alarms")
+```
+
+## Widlife Concern
+
+```{r Wildlife}
+plot_imd("animals")
+```
+
+
+## ASB
+
+```{r ASB}
+plot_imd("ASB")
+```
+
+
+
+
+## Burglary - Commercial
+
+```{r Burglary - Commercial}
+plot_imd("Burglary - Business/Commercial")
+```
+
+
+
+## Burglary - Residential
+
+```{r Burglary - Residential}
+plot_imd("Burglary - Residential")
+```
+
+
+
+## Civil Disputes
+
+```{r Civil Disputes}
+
+plot_imd("Civil Disputes")
+```
+
+
+
+## Police Safety 
+
+```{r Police Safety}
+
+plot_imd("Code Zero")
+```
+
+
+## Minor Injuries 
+
+```{r Minor Injuries}
+
+plot_imd("Collapse/Illness/Injury/Trapped")
+```
+
+## Complaints Against Police
+
+```{r Compaints Against Police}
+
+plot_imd("Complaints Against Police")
+```
+
+
+
+## Concern for Safety 
+
+```{r Concern For Safety}
+plot_imd("Concern For Safety")
+```
+
+
+## Criminal Damage 
+
+```{r Criminal Damage}
+plot_imd("Criminal Damage")
+```
+
+
+
+## Domestic Incident
+
+```{r Domestic Incident}
+plot_imd("Domestic Incident")
+```
+
+
+
+
+## Drug Related Offences 
+
+
+```{r Drug Related Offences}
+plot_imd("Drugs")
+```
+
+
+
+
+## Firearms 
+
+
+```{r Firearms}
+plot_imd("firearms")
+```
+
+
+
+## Fraud
+
+
+```{r Fraud}
+plot_imd("Fraud")
+```
+
+
+
+## Hate Incident 
+
+
+```{r Hate Incident}
+plot_imd("Hate Incident")
+```
+
+
+
+## Highway Disruption 
+
+```{r Highway Disruption}
+plot_imd("Highway Disruption")
+```
+
+
+
+
+## Missing Person 
+
+```{r Missing Person}
+plot_imd("Missing Person")
+```
+
+
+
+## Other - Admin Calls
+
+```{r Other -Admin Calls}
+plot_imd("other - admin")
+```
+
+
+## Other - minor 
+
+
+```{r Other - minor}
+plot_imd("other - minor")
+```
+
+
+ 
+## Police Generated 
+
+```{r Police Generated}
+plot_imd("Police Generated")
+```
+
+
+
+## Potential Breach of the Peace
+
+
+```{r Breach of Peace}
+plot_imd("Prevent Potential Breach of the Peace")
+```
+
+
+
+## Property Lost/Found 
+
+
+```{r Property Lost/Found}
+plot_imd("Property Lost/Found")
+```
+
+
+
+
+## Road Related Traffic Offence
+
+```{r Road Related Traffic}
+plot_imd("Road Related Traffic Offence")
+```
+
+
+## Robbery 
+
+```{r Robbery}
+plot_imd("Robbery")
+```
+
+
+## Sexual Offences
+
+
+```{r Sexual Offences}
+plot_imd("Sexual Offences")
+```
+
+
+
+
+## Shoplifitng
+
+```{r Shoplifting}
+plot_imd("Shoplifting")
+```
+
+
+
+## Sudden Death 
+
+```{r Sudden Death}
+plot_imd("Sudden Death")
+```
+
+
+
+## Suspicious Activity 
+
+```{r Suspicious Activity}
+plot_imd("Suspicious Activity")
+```
+
+
+
+## Suspicious Package 
+
+```{r Suspicious Package}
+plot_imd("Suspicious Package")
+```
+
+
+
+## Theft from Motor Vehicle
+
+```{r Theft From Motor Vehicle}
+plot_imd("Theft From Motor Vehicle")
+```
+
+
+
+## Theft of Motor Vehicle 
+
+
+```{r Theft of Motor Vehicle}
+plot_imd("Theft Of Motor Vehicle")
+```
+
+
+
+## Theft Other 
+
+```{r Theft Other}
+plot_imd("Theft Other")
+```
+
+
+
+## Traffic collision
+
+```{r Traffic Collisions}
+plot_imd("traffic collision")
+```
+
+
+
+## Violence and Harassment Incidents 
+
+```{r Violence/Harassment}
+plot_imd("Violence/Harassment")
+```
+
+
+
+## Warrant and Bail Incidents 
+
+
+```{r Warrant/Bail}
+plot_imd("warrant/bail issue")
+```
+
+
+
+
+
+
+

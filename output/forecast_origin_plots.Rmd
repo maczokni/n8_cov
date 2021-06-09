@@ -1,6 +1,6 @@
 ---
-title: "forecast_origin_plots"
-author: "Nads"
+title: "Calls for Service During 2021 Compared to Pre-Pandemic Forecast - Call Origin"
+author: "Matt Ashby, Nadia Kennar, Reka Solymosi"
 date: "28/04/2021"
 output: html_document
 ---
@@ -14,10 +14,8 @@ library(tsibble)
 ```
 
 
-##By inidivdual Catergory 
-
 ```{r load data, include=FALSE}
-call_forecasts <- read_rds(here::here("output/call_origin_forcasts.Rds"))
+call_forecasts <- read_rds(here::here("output/call_origin_forecasts.Rds"))
 
 # Note important dates
 # Source: https://www.instituteforgovernment.org.uk/sites/default/files/timeline-lockdown-web.pdf
@@ -43,6 +41,13 @@ forecast_chart <- function (forecasts, types) {
   
   forecasts %>% 
     filter(call_origin %in% types) %>% 
+    # Occasionally the ARIMA model may produce forecast confidence intervals
+    # that are less than zero, which will not show up on the plot because we
+    # have set the y axis to start at zero (to make changes in vertical position
+    # on the axis representative of changes in magnitude). To deal with this we
+    # will manually set the lower CI of the forecasts to be zero if it is less
+    # than zero in the original forecast.
+    mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
     ggplot() +
     # Forecast
     geom_ribbon(
@@ -58,7 +63,8 @@ forecast_chart <- function (forecasts, types) {
     # Actual calls
     geom_line(aes(incident_week, actual_calls)) +
     geom_point(aes(incident_week, actual_calls, fill = sig), shape = 21) +
-    scale_x_date(date_labels = "%e %b\n%Y") +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+                 limits = as.Date(c("2020-01-06", "2020-12-21"))) +
     scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
     scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
     labs(
@@ -80,34 +86,49 @@ forecast_chart <- function (forecasts, types) {
 
 
 
-#Other Emergency Services 
+
+
+## Other Emergency Services 
 
 ```{r OES}
 forecast_chart(call_forecasts, "other emergency services")
 ```
 
 
-#Police Generated
+No noticeable differnce between actual calls and forecast 
+
+
+## Police Generated
 
 ```{r Police Generated}
 forecast_chart(call_forecasts, "police generated")
 ```
 
+No noticeable difference between actual cals and forecast (after, manually setting the lower CI of the forecasts to be zero if it is less than zero in the original forecast))
 
-#Public Non-Emergency 
+
+
+
+## Public Non-Emergency 
 
 ```{r Public Non-Emergency}
 forecast_chart(call_forecasts, "public non-emergency")
 ```
 
+No noticeable difference between actual cals and forecast
 
-#ANPR
+
+## ANPR
 
 ```{r ANPR}
 forecast_chart(call_forecasts, "ANPR")
 ```
 
-#999
+No noticeable difference between actual calls and forecast - ?
+
+
+
+## 999
 
 ```{r 999}
 forecast_chart(call_forecasts, "999")
@@ -120,9 +141,15 @@ forecast_chart(call_forecasts, "999")
 
 
 
+Calls to 999 received pre-pandemic are higher than those actual actual received during the pandemic. This would be expected with reduced opportunities to commit crimes and therefore less crimes to report. However, there is no clear noticeable trend in the changes as unsure if these changes would be expected?
 
 
-##By Groups
+
+
+
+
+
+
 
 
 
