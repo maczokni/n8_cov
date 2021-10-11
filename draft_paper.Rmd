@@ -7,6 +7,160 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Load libraries
+library(lubridate)
+library(tsibble)
+library(tidyverse)
+
+# Load calls (find own path to UoM server)
+# calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
+calls <- read_csv("/Volumes/n8_covid/n8_data_v2.csv.gz") %>%  janitor::clean_names()
+
+# Clean calls
+# Find categories with fewer than a certain number of calls so we can exclude
+# these, since these call types are not amenable to these types of incidents
+minor_categories <- calls %>% 
+  count(incident_type) %>% 
+  filter(n < 1000) %>% 
+  pull(incident_type)
+
+# Categorise calls
+calls <- mutate(
+  calls,
+  incident_type_new = case_when(
+    incident_type %in% c("Distraction Burglary") ~
+      "Burglary - Residential",
+    incident_type %in% c(
+      "Assistance to Other Agencies",
+      "CRB Use Only",
+      "CSI To Be Informed",
+      "External System",
+      "Found Stolen Vehicle",
+      "Message to Pass/OOF Enquiries",
+      "PNC Markers",
+      "Police Vehicle Recovery",
+      "Pre-Planned Events",
+      "Stop Search",
+      "Training"
+    ) ~ "other - admin",
+    incident_type %in% c(
+      "Alarm - Activation", 
+      "Alarm - No Response", 
+      "Audible Only Alarm",
+      "Insecure Premises",
+      "Police Installed Alarm",
+      "Unauthorised Encampment"
+    ) ~ "alarms",
+    incident_type %in% c(
+      "Bail Breaches/Wanted Person",
+      "Bail/Curfew/Wanted",
+      "Prison Licence Recall",
+      "Warrant Crown Court"
+    ) ~ "warrant/bail issue",
+    incident_type %in% c("Domestic Animal Concern", "Wildlife Matters") ~ 
+      "animals",
+    incident_type %in% c(
+      "Firearms - Non Notifiable Crime",
+      "Firearms Involved Crime"
+    ) ~ "firearms",
+    incident_type %in% c("RTC", "RTC - Damage Only") ~ "traffic collision",
+    incident_type %in% minor_categories ~ "other - minor",
+    TRUE ~ incident_type
+  )
+)
+
+# Note important dates
+# Source: https://www.instituteforgovernment.org.uk/sites/default/files/timeline-lockdown-web.pdf
+dates <- tribble(
+  ~date, ~event,
+  "2020-01-31", "first UK COVID case",
+  "2020-03-23", "first lockdown begins",
+  "2020-06-15", "first lockdown ends",
+  "2020-11-05", "second lockdown begins",
+  "2020-12-02", "second lockdown ends"
+) %>% 
+  mutate(
+    date = as_date(yearweek(ymd(date))), 
+    row = row_number(),
+    label = str_glue("{row}. {event}")
+  )
+
+# read in forecasts
+# path to UoM server different for everyone
+call_forecasts <- read_rds("/Volumes/n8_covid/call_forecasts.Rds")
+all_rt_forecast <- read_rds("/Volumes/n8_covid/all_resp_time_forecast.Rds")
+by_type_rt_forecast <- read_rds("/Volumes/n8_covid/by_type_rt_forecasts.Rds")
+by_grade_rt_forecast <- read_rds("/Volumes/n8_covid/by_grade_rt_forecasts.Rds")
+all_calls_attended_forecast <- read_rds("/Volumes/n8_covid/all_attended_forecasts.Rds")
+by_type_attended_forecast <- read_rds("/Volumes/n8_covid/by_type_attended_forecasts.Rds")
+
+
+
+# Chart code
+# specify the forecast (the df of the forecast), the variable we're modelling ("incident_type_new", "initial_grade_of_response"), and the value we're filtering on (e.g. "ASB" or "Grade 1"). 
+
+forecast_chart <- function (forecasts, variable, value) {
+  
+
+  # get forecast type to string
+  df_name <- deparse(substitute(forecasts))
+  
+  # conditionally label y axis
+  y_axis_label <- case_when(df_name %in% c("by_type_rt_forecast", 
+                                           "by_grade_rt_forecast") ~ "Median response time (in minutes)", 
+                         df_name %in% c("call_forecasts") ~ "Weekly count of calls for service", 
+                         df_name %in% c("by_type_attended_forecast", "by_grade_attended_forecast") ~ "Weekly % of calls attended")
+  
+  
+  # conditionally find actual value column
+  actual_col_name <- case_when(df_name %in% c("by_type_rt_forecast", 
+                                           "by_grade_rt_forecast") ~ "actual_rt", 
+                         df_name %in% c("call_forecasts") ~ "actual_calls", 
+                         df_name %in% c("by_type_attended_forecast", "by_grade_attended_forecast") ~ "actual_attended")
+  
+  forecasts %>% 
+    filter(eval(as.symbol(variable)) == value) %>% 
+    # Occasionally the ARIMA model may produce forecast confidence intervals
+    # that are less than zero, which will not show up on the plot because we
+    # have set the y axis to start at zero (to make changes in vertical position
+    # on the axis representative of changes in magnitude). To deal with this we
+    # will manually set the lower CI of the forecasts to be zero if it is less
+    # than zero in the original forecast.
+    mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
+    ggplot() +
+    # Forecast
+    geom_ribbon(
+      aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+      na.rm = TRUE,
+      alpha = 0.5, 
+      fill = "grey80"
+    ) +
+    geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+    # Actual calls
+    geom_line(aes(incident_week, eval(as.symbol(actual_col_name)))) +
+    geom_point(aes(incident_week, eval(as.symbol(actual_col_name)), fill = sig), shape = 21) +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+                 limits = as.Date(c("2020-01-06", "2020-12-21")))+
+    scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+    scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+    labs(
+      title = value,
+      subtitle = "",
+      caption = "Forecast calculated using data up to 31 January 2020",
+      x = NULL,
+      y = y_axis_label,
+      fill = "Actual response time significantly different from forecast"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+  
+}
+
+
 ```
 
 ## Abstract
@@ -38,46 +192,190 @@ To answer these questions, we use data containing all calls for service made to 
 
 ## Results
 
-Overall volume of calls for service made in 2020 were below what we would expect based on past years' data. A higher proportion of calls were attended, and the response time was also shorter than the forecasts.  
+Overall volume of calls for service made in 2020 were below what we would expect based on past years' data. 
+
+```{r}
+
+# Total calls fig
+
+```
+
+A higher proportion of calls were attended, and the response time was also shorter than the forecasts.  
+
+```{r}
+
+# % attended fig and response time fig
+
+```
 
 We present key themes which emerged from our data. 
 
 ### Shooting fish in a barrel
 
 - Drug related offences
+
+```{r drugsfig}
+
+# Drugs fig
+forecast_chart(call_forecasts, "incident_type_new", "Drugs")
+
+```
+
 - ASB - although COVID breach was coded as ASB so can we even say this??
+
+```{r asbfig}
+
+# ASB fig
+forecast_chart(call_forecasts, "incident_type_new", "ASB")
+
+```
+
 - Police generated?
+
+```{r policegenfig}
+
+# Police generated fig
+forecast_chart(call_forecasts, "incident_type_new", "Police Generated")
+
+
+```
 
 ### Increased guardianship 
 
 - Residential burglary
+
+```{r resburgfig}
+
+# Residential burglary fig
+forecast_chart(call_forecasts, "incident_type_new", "Burglary - Residential")
+
+
+
+```
+
 - Theft from MV (and theft of)
+
+```{r theftmv}
+
+# Theft of and theft from MV fig
+forecast_chart(call_forecasts, "incident_type_new", "Theft From Motor Vehicle")
+forecast_chart(call_forecasts, "incident_type_new", "Theft Of Motor Vehicle")
+
+
+```
+
 - Theft other 
+
+```{r}
+
+# Theft other fig
+forecast_chart(call_forecasts, "incident_type_new", "Theft Other")
+
+
+```
+
 - Criminal damage (???)
+
+```{r crimdamfig}
+
+# Crim dam fig
+forecast_chart(call_forecasts, "incident_type_new", "Criminal Damage")
+
+
+```
 
 ### Removal of suitable targets
 
 - Shoplifting
+
+```{r shopliftingfig}
+
+# Shoplifting fig
+forecast_chart(call_forecasts, "incident_type_new", "Shoplifting")
+
+
+```
+
 - Robbery
+
+```{r robberyfig}
+
+# Robbery fig
+forecast_chart(call_forecasts, "incident_type_new", "Robbery")
+
+
+```
+
+
+### Domestic incidents
+
+This is worth highlighting as there was much discussion about increase of domestic incidents during the lockdowns. When we look at all domestic incidents as a whole we do not really see this. 
+
+```{r domesticfig}
+
+# domestic fig
+forecast_chart(call_forecasts, "incident_type_new", "Domestic Incident")
+
+
+```
+
+
+However when we break down by grade of call
+
+```{r}
+
+# Domestic by grade fig
+
+```
+
+
+Police response by grade
+
+```{r}
+
+# Attended by grade fig and response time by grade fig
+
+```
+
 
 ### Freed up resources
 
-Attend more stuff where less time at scene - eg night time economy calls takes people off scene for longer?
+Attend more stuff where less time at scene - eg night time economy calls takes people off scene for longer? *check time on scene*
 
-Officer workload changed (lowered) so more patrol and offering reassurance. Lower workload more responsive?
+With fewer calls for *list everything that had fewer than pre-covid* it is likely that officer workload changed (i.e. lowered). This meant quicker response times for calls. Figure X shows median response times by grade. Response times decreased for grade 1, grade 2, and grade 3 calls, the most drastic decrease in the latter category. This suggests that the freed up resources allowed faster responding to routine response calls. There was no difference in response time to those grade 4 calls (these require attendance or other resolution within 48 hours) and grade 5 calls are not attended. 
 
-Budget for covid cars - also free up resources - these dealt with the ASB?
+```{r}
 
-One explanation for why response time decreased?
+# Figs for grade 1, 2, 3, and 4 calls response times
+forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 1")
+forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 2")
+forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 3")
+forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 4")
+
+
+```
+
+
+
+Budget for covid cars - also free up resources - these dealt with the ASB? **Ask in interview about "covid cars" and whether these dealt with ASB**
+
+
 
 
 ### Quiet streets
 
-- highway disruption
-- traffic collision
-- Road Related Traffic Offence
+Another possible explanation for the decrease in response times of course is the quiet streets. We see that calls related to roads all dropped off in the first lock down, as fewer people were driving. Figures A, B, and C show how calls for highway disruption, traffic collision, and road related traffic offences were all less than would be expected based on previous years' data. 
 
-Another explanation for why response time decreased?
+```{r roadsetcfigs}
+
+# Figs for highway disruption, traffic collision, and road related traffic offences
+forecast_chart(call_forecasts, "incident_type_new" ,"traffic collision")
+forecast_chart(call_forecasts, "incident_type_new" ,"Highway Disruption")
+forecast_chart(call_forecasts, "incident_type_new" ,"Road Related Traffic Offence")
+
+
+```
+
 
 ### IMD stuff (did the callers change?)
 
