@@ -8,7 +8,8 @@ library(tidyverse)
 
 # Read and clean data
 
-calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
+# calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
+calls <- read_csv("/Volumes/n8_covid/n8_data_v2.csv.gz") %>%  janitor::clean_names()
 
 # Find categories with fewer than a certain number of calls so we can exclude
 # these, since these call types are not amenable to these types of incidents
@@ -62,7 +63,7 @@ calls <- mutate(
   )
 )
 
-# create response time variable
+# create attended variable
 
 
 calls$attended <- case_when(calls$attended_flag == 1 ~ "Yes", 
@@ -97,7 +98,7 @@ median_response_time <- attended_calls %>%
 #  convert to a tsibble object
 
 median_response_time <- median_response_time %>% 
-  slice(2:(n() - 1)) %>% # remove first and last row
+  # slice(2:(n() - 1)) %>% # remove first and last row
   as_tsibble(index = incident_week) %>% 
   fill_gaps(median_resp_time = NA) %>% 
   # Add dummy variables
@@ -186,7 +187,7 @@ median_response_time <- attended_calls %>%
   mutate(incident_week = yearweek(incident_date_time)) %>% 
   group_by(incident_week, incident_type_new) %>% 
   summarise(median_resp_time = median(response_time_mins, na.rm = TRUE)) %>% 
-  slice(2:(n() - 1)) %>% 
+  # slice(2:(n() - 1)) %>% 
   as_tsibble(index = incident_week, key = incident_type_new) %>% 
   fill_gaps(median_resp_time = NA) %>% 
   # Add dummy variables
@@ -264,5 +265,94 @@ final_median_rt <- median_response_time %>%
 
 # Save result for use elsewhere (e.g. in an Rmarkdown document)
 write_rds(final_median_rt, here::here("output/by_type_rt_forecasts.Rds"))
+
+
+# now break it down by grade
+
+# Count median response time for calls which were attended, add dummy variables and convert to a tsibble object
+
+
+median_response_time <- attended_calls %>% 
+  mutate(incident_week = yearweek(incident_date_time)) %>% 
+  group_by(incident_week, initial_grade_of_response) %>% 
+  summarise(median_resp_time = median(response_time_mins, na.rm = TRUE)) %>% 
+  # slice(2:(n() - 1)) %>% 
+  as_tsibble(index = incident_week, key = initial_grade_of_response) %>% 
+  fill_gaps(median_resp_time = NA) %>% 
+  # Add dummy variables
+  mutate(
+    # Dummy for change from old to new call-handling system
+    new_system = incident_week > yearweek(ymd("2017-06-03")),
+    # Dummy for changes in practice after adverse HMIC call-handling report
+    hmic_changes = incident_week > yearweek(ymd("2017-05-15")), 
+    # Dummy for bank holiday 
+    bank_holiday = incident_week %in% yearweek(as_date(timeDate::holidayLONDON(year = 2015:2020))))
+
+
+
+model_rt <- median_response_time %>% 
+  filter(incident_week < yearweek(ymd("2020-01-31"))) %>% 
+  model(
+    arima = ARIMA(median_resp_time ~ trend() + season() + new_system + hmic_changes + bank_holiday)
+  )
+
+
+
+# Create data for forecasting
+
+fdata_median_rt <- expand_grid(
+  initial_grade_of_response  = unique(model_rt$initial_grade_of_response),
+  incident_week = yearweek(seq.Date(
+    from = ymd("2020-01-31"), 
+    to = ymd("2020-12-31"),
+    by = "week"
+  )),
+  new_system = TRUE,
+  hmic_changes = TRUE
+) %>% 
+  as_tsibble(index = incident_week, key = initial_grade_of_response) 
+
+#key = call_origin
+fdata_median_rt$bank_holiday <- fdata_median_rt$incident_week %in% yearweek(as_date(timeDate::holidayLONDON(year = 2020)))
+# Create forecasts and extract confidence intervals
+forecast_all_calls <- model_rt %>% 
+  forecast(new_data = fdata_median_rt) %>% 
+  hilo(level = 95) %>% 
+  janitor::clean_names() %>% 
+  unpack_hilo(cols = x95_percent) 
+
+
+# Join actual counts to the forecast object and check if actual calls were 
+# outside the forecast range
+final_median_rt <- median_response_time %>% 
+  filter(
+    initial_grade_of_response %in% unique(model_rt$initial_grade_of_response),
+    incident_week > yearweek(ymd("2019-12-31"))
+  ) %>% 
+  select(incident_week, actual_rt = median_resp_time) %>% 
+  full_join(
+    forecast_all_calls, 
+    by = c("initial_grade_of_response", "incident_week")
+  ) %>% 
+  select(
+    initial_grade_of_response,
+    incident_week, 
+    actual_rt, 
+    forecast_mean = mean, 
+    forecast_lower = x95_percent_lower, 
+    forecast_upper = x95_percent_upper
+  ) %>% 
+  mutate(
+    # When plotting, it is more convenient to store the week as a date rather 
+    # than a `yearweek` column
+    incident_week = as_date(incident_week),
+    # Calls are significantly different from the forecast if the call count is
+    # less than the lower 95% CI or higher than the upper 95% CI
+    sig = actual_rt < forecast_lower | actual_rt > forecast_upper
+  ) %>% 
+  replace_na(list(sig = FALSE))
+
+# Save result for use elsewhere (e.g. in an Rmarkdown document)
+write_rds(final_median_rt, here::here("output/by_grade_rt_forecasts.Rds"))
 
 

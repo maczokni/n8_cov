@@ -1,0 +1,92 @@
+---
+title: "Paper"
+author: "Nadia Kennar, Matt Ashby, Eon Kim, Reka Solymosi"
+date: "11/10/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+## Abstract
+
+
+## Inroduction
+
+This paper explores how demand on police time changed during COVID-19 pandemic and lockdown. We consider calls for service for a northwest england police force, using 5 years' pre-pandemic data to establish trends, and build a forecast against which to compare observed data. Specifically we look at how call volume, attendance, and response time changed (or did not change) for different call categories (examples), whether there was a change in how the calls came in (999, police non-emergency, etc) or how these changes differed between severity of call (grade). We further disaggregate calls coming from areas with areas with different socio-demographic characteristics to understand how COVID-19 affected different sections of society differently in terms of incidents which they deemed required police assistance. 
+
+The contribution of this paper is three fold. First, we contribute to the growing literature which aims to better understand demand on police time, and how the pandemic and associated lockdowns influenced this. Second, we disaggregate calls from areas with different socio-demographic characteristic, to understand not only how police demand changed, but the variations in this change between different groups in society. Finally, we showcase temporal forecasting as an appropriate methodological approach to compare what we might have expected to happen in 2020/2021 in the absence of the pandemic, versus the observed data. 
+
+## Demand on police time
+
+It is important to study how police spend their time. Misconception about always focus on crime. Majority of time spent on non-crime calls e.g. mental health, missing persons, etc. What we know about demand on police time. 3 reasons why it's important to study. 
+
+### The effect of COVID-19
+
+Other studies which have explored how COVID-19 and associated lockdowns have affected demand on police time. Why this is important to understand. What is the gap: - big picture (all demand, not just crime), disaggregate by where the calls come from, and using forecasting to project what would have happened based on past data and compare observed data with this. 
+
+## The current study
+
+In this paper we explore how did demand on police time (as measured by calls to police) change over the pandemic? and address the gaps noted above. Specifically we look to answer the following research questions: 
+
+- For which call categories did observed data deviate from what would be predicted in the absence of the pandemic?
+- Was there change in what proportion of calls were attended, and in the response time for the attended calls?
+- Are there differences between calls coming from areas with different socio-demographic characteristics? 
+
+To answer these questions, we use data containing all calls for service made to northwest england police force between start date and end date. We build a forecast on 5 years of pre-pandemic data, and then compare this to what was observed during the pandemic. We followed up this analysis with qualitative interviews with call centre staff in the same force, to understand the experience of call handlers, and build a richer understanding of the context behind the calls data. 
+
+## Results
+
+Overall volume of calls for service made in 2020 were below what we would expect based on past years' data. A higher proportion of calls were attended, and the response time was also shorter than the forecasts.  
+
+We present key themes which emerged from our data. 
+
+### Shooting fish in a barrel
+
+- Drug related offences
+- ASB - although COVID breach was coded as ASB so can we even say this??
+- Police generated?
+
+### Increased guardianship 
+
+- Residential burglary
+- Theft from MV (and theft of)
+- Theft other 
+- Criminal damage (???)
+
+### Removal of suitable targets
+
+- Shoplifting
+- Robbery
+
+### Freed up resources
+
+Attend more stuff where less time at scene - eg night time economy calls takes people off scene for longer?
+
+Officer workload changed (lowered) so more patrol and offering reassurance. Lower workload more responsive?
+
+Budget for covid cars - also free up resources - these dealt with the ASB?
+
+One explanation for why response time decreased?
+
+
+### Quiet streets
+
+- highway disruption
+- traffic collision
+- Road Related Traffic Offence
+
+Another explanation for why response time decreased?
+
+### IMD stuff (did the callers change?)
+
+
+look at IMD stuff
+
+
+## Discussion
+
+
+
+
