@@ -94,6 +94,8 @@ by_type_rt_forecast <- read_rds("/Volumes/n8_covid/by_type_rt_forecasts.Rds")
 by_grade_rt_forecast <- read_rds("/Volumes/n8_covid/by_grade_rt_forecasts.Rds")
 all_calls_attended_forecast <- read_rds("/Volumes/n8_covid/all_attended_forecasts.Rds")
 by_type_attended_forecast <- read_rds("/Volumes/n8_covid/by_type_attended_forecasts.Rds")
+domestic_by_grade_volume_forecasts <- read_rds("/Volumes/n8_covid/domestic_by_grade_volume_forecasts.Rds")
+domestic_by_grade_rt_forecast <- read_rds("/Volumes/n8_covid/domestic_by_grade_rt_forecasts.Rds")
 
 
 
@@ -108,16 +110,21 @@ forecast_chart <- function (forecasts, variable, value) {
   
   # conditionally label y axis
   y_axis_label <- case_when(df_name %in% c("by_type_rt_forecast", 
-                                           "by_grade_rt_forecast") ~ "Median response time (in minutes)", 
+                                           "by_grade_rt_forecast", 
+                                           "domestic_by_grade_rt_forecast", 
+                                           "domestic_by_grade_volume_forecasts") ~ "Median response time (in minutes)", 
                          df_name %in% c("call_forecasts") ~ "Weekly count of calls for service", 
                          df_name %in% c("by_type_attended_forecast", "by_grade_attended_forecast") ~ "Weekly % of calls attended")
   
   
   # conditionally find actual value column
   actual_col_name <- case_when(df_name %in% c("by_type_rt_forecast", 
-                                           "by_grade_rt_forecast") ~ "actual_rt", 
+                                           "by_grade_rt_forecast",
+                                           "domestic_by_grade_rt_forecast", 
+                                           "domestic_by_grade_volume_forecasts") ~ "actual_rt", 
                          df_name %in% c("call_forecasts") ~ "actual_calls", 
-                         df_name %in% c("by_type_attended_forecast", "by_grade_attended_forecast") ~ "actual_attended")
+                         df_name %in% c("by_type_attended_forecast",
+                                        "by_grade_attended_forecast") ~ "actual_attended")
   
   forecasts %>% 
     filter(eval(as.symbol(variable)) == value) %>% 
@@ -153,7 +160,7 @@ forecast_chart <- function (forecasts, variable, value) {
       caption = "Forecast calculated using data up to 31 January 2020",
       x = NULL,
       y = y_axis_label,
-      fill = "Actual response time significantly different from forecast"
+      fill = "Actual observed value significantly different from forecast"
     ) +
     theme_minimal() +
     theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
@@ -326,14 +333,31 @@ However when we break down by grade of call
 
 # Domestic by grade fig
 
+forecast_chart(domestic_by_grade_rt_forecast,"initial_grade_of_response", "Grade 1")
+
+
+
+
 ```
 
 
-Police response by grade
-
 ```{r}
 
-# Attended by grade fig and response time by grade fig
+# Attended by grade fig
+
+```
+
+
+Police response by grade. For grade 1, response time was within what was forecasted, however for grade 2 calls response times decreased during the pandemic. For grades 3 and 4 the forecase is too noisy (too few observations). 
+
+```{r dvresponsebygrade}
+
+# Response time by grade fig
+
+forecast_chart(domestic_by_grade_rt_forecast,"initial_grade_of_response", "Grade 1")
+forecast_chart(domestic_by_grade_rt_forecast,"initial_grade_of_response", "Grade 2")
+
+
 
 ```
 

@@ -72,7 +72,7 @@ count_all_calls <- calls %>%
   # years. This means that at the start and end of the data there might be (and
   # in-fact are) partial weeks containing fewer than seven days, meaning those
   # 'weekly' call counts are artificially low.
-  slice(2:(n() - 1)) %>% 
+  # slice(2:(n() - 1)) %>% 
   as_tsibble(index = incident_week, key = incident_type_new) %>% 
   fill_gaps(call_count = 0) %>% 
   # Add dummy variables
@@ -158,6 +158,88 @@ final_all_calls <- count_all_calls %>%
 # Save result for use elsewhere (e.g. in an Rmarkdown document)
 write_rds(final_all_calls, here::here("output/call_forecasts.Rds"))
 
+
+# For DV only
+
+count_calls <- calls %>% 
+  filter(incident_type_new == "Domestic Incident") %>% 
+  mutate(incident_week = yearweek(incident_date_time)) %>% 
+  group_by(incident_week, initial_grade_of_response) %>% 
+  summarise(num_calls = n()) %>% 
+  # slice(2:(n() - 1)) %>% 
+  as_tsibble(index = incident_week, key = initial_grade_of_response) %>% 
+  fill_gaps(num_calls = 0) %>% 
+  # Add dummy variables
+  mutate(
+    # Dummy for change from old to new call-handling system
+    new_system = incident_week > yearweek(ymd("2017-06-03")),
+    # Dummy for changes in practice after adverse HMIC call-handling report
+    hmic_changes = incident_week > yearweek(ymd("2017-05-15")), 
+    # Dummy for bank holiday 
+    bank_holiday = incident_week %in% yearweek(as_date(timeDate::holidayLONDON(year = 2015:2020))))
+
+
+
+model_all_calls <- count_calls %>% 
+  filter(incident_week < yearweek(ymd("2020-01-31"))) %>% 
+  model(
+    arima = ARIMA(num_calls ~ trend() + season() + new_system + hmic_changes + bank_holiday)
+  )
+
+
+fdata_all_calls <- expand_grid(
+  initial_grade_of_response  = unique(model_all_calls$initial_grade_of_response),
+  incident_week = yearweek(seq.Date(
+    from = ymd("2020-01-31"), 
+    to = ymd("2020-12-31"),
+    by = "week"
+  )),
+  new_system = TRUE,
+  hmic_changes = TRUE
+) %>% 
+  as_tsibble(index = incident_week, key = initial_grade_of_response) 
+#key = call_origin
+fdata_all_calls$bank_holiday <- fdata_all_calls$incident_week %in% yearweek(as_date(timeDate::holidayLONDON(year = 2020)))
+# Create forecasts and extract confidence intervals
+forecast_all_calls <- model_all_calls %>% 
+  forecast(new_data = fdata_all_calls) %>% 
+  hilo(level = 95) %>% 
+  janitor::clean_names() %>% 
+  unpack_hilo(cols = x95_percent) 
+
+
+# Join actual counts to the forecast object and check if actual calls were 
+# outside the forecast range
+final_all_calls <- count_calls %>% 
+  filter(
+    initial_grade_of_response %in% unique(model_all_calls$initial_grade_of_response),
+    incident_week > yearweek(ymd("2019-12-31"))
+  ) %>% 
+  select(incident_week, actual_calls = num_calls) %>% 
+  full_join(
+    forecast_all_calls, 
+    by = c("initial_grade_of_response", "incident_week")
+  ) %>% 
+  select(
+    initial_grade_of_response,
+    incident_week, 
+    actual_calls, 
+    forecast_mean = mean, 
+    forecast_lower = x95_percent_lower, 
+    forecast_upper = x95_percent_upper
+  ) %>% 
+  mutate(
+    # When plotting, it is more convenient to store the week as a date rather 
+    # than a `yearweek` column
+    incident_week = as_date(incident_week),
+    # Calls are significantly different from the forecast if the call count is
+    # less than the lower 95% CI or higher than the upper 95% CI
+    sig = actual_calls < forecast_lower | actual_calls > forecast_upper
+  ) %>% 
+  replace_na(list(sig = FALSE))
+
+# Save result for use elsewhere (e.g. in an Rmarkdown document)
+write_rds(final_all_calls, here::here("output/domestic_by_grade_volume_forecasts.Rds"))
 
 
 
