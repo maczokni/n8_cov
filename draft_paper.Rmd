@@ -96,6 +96,7 @@ all_calls_attended_forecast <- read_rds("/Volumes/n8_covid/all_attended_forecast
 by_type_attended_forecast <- read_rds("/Volumes/n8_covid/by_type_attended_forecasts.Rds")
 domestic_by_grade_volume_forecasts <- read_rds("/Volumes/n8_covid/domestic_by_grade_volume_forecasts.Rds")
 domestic_by_grade_rt_forecast <- read_rds("/Volumes/n8_covid/domestic_by_grade_rt_forecasts.Rds")
+domestic_by_grade_attended_forecasts <- read_rds("/Volumes/n8_covid/domestic_by_grade_attended_forecasts.Rds")
 
 
 
@@ -111,20 +112,23 @@ forecast_chart <- function (forecasts, variable, value) {
   # conditionally label y axis
   y_axis_label <- case_when(df_name %in% c("by_type_rt_forecast", 
                                            "by_grade_rt_forecast", 
-                                           "domestic_by_grade_rt_forecast", 
-                                           "domestic_by_grade_volume_forecasts") ~ "Median response time (in minutes)", 
-                         df_name %in% c("call_forecasts") ~ "Weekly count of calls for service", 
-                         df_name %in% c("by_type_attended_forecast", "by_grade_attended_forecast") ~ "Weekly % of calls attended")
+                                           "domestic_by_grade_rt_forecast") ~ "Median response time (in minutes)", 
+                         df_name %in% c("call_forecasts", 
+                                           "domestic_by_grade_volume_forecasts") ~ "Weekly count of calls for service", 
+                         df_name %in% c("by_type_attended_forecast",
+                                        "by_grade_attended_forecast", 
+                                        "domestic_by_grade_attended_forecasts") ~ "Weekly % of calls attended")
   
   
   # conditionally find actual value column
   actual_col_name <- case_when(df_name %in% c("by_type_rt_forecast", 
                                            "by_grade_rt_forecast",
-                                           "domestic_by_grade_rt_forecast", 
-                                           "domestic_by_grade_volume_forecasts") ~ "actual_rt", 
-                         df_name %in% c("call_forecasts") ~ "actual_calls", 
+                                           "domestic_by_grade_rt_forecast") ~ "actual_rt", 
+                         df_name %in% c("call_forecasts", 
+                                           "domestic_by_grade_volume_forecasts") ~ "actual_calls", 
                          df_name %in% c("by_type_attended_forecast",
-                                        "by_grade_attended_forecast") ~ "actual_attended")
+                                        "by_grade_attended_forecast", 
+                                        "domestic_by_grade_attended_forecasts") ~ "actual_attended")
   
   forecasts %>% 
     filter(eval(as.symbol(variable)) == value) %>% 
@@ -327,28 +331,35 @@ forecast_chart(call_forecasts, "incident_type_new", "Domestic Incident")
 ```
 
 
-However when we break down by grade of call
+This does not change when we break down by grade of call.
+
 
 ```{r}
 
 # Domestic by grade fig
 
-forecast_chart(domestic_by_grade_rt_forecast,"initial_grade_of_response", "Grade 1")
-
-
+forecast_chart(domestic_by_grade_volume_forecasts,"initial_grade_of_response", "Grade 1")
+forecast_chart(domestic_by_grade_volume_forecasts,"initial_grade_of_response", "Grade 2")
+forecast_chart(domestic_by_grade_volume_forecasts,"initial_grade_of_response", "Grade 3")
+forecast_chart(domestic_by_grade_volume_forecasts,"initial_grade_of_response", "Grade 4")
 
 
 ```
 
+However we do see an increased response from police to Domestic Incident calls. Not so much for grade 1, which were attended near 100% of cases before, during, and after the pandemic, but for calls initially graded as grade 2 attendance rate increased. Grade 3 and 4 are again too noisy for anything. 
 
 ```{r}
 
 # Attended by grade fig
+forecast_chart(domestic_by_grade_attended_forecasts,"initial_grade_of_response", "Grade 1")
+forecast_chart(domestic_by_grade_attended_forecasts,"initial_grade_of_response", "Grade 2")
+
+
 
 ```
 
 
-Police response by grade. For grade 1, response time was within what was forecasted, however for grade 2 calls response times decreased during the pandemic. For grades 3 and 4 the forecase is too noisy (too few observations). 
+In fact, as well as responding to more calls initially graded as grade 2, response time to these calls has decreased as well. While response time for grade 1 calls was within what was forecasted, for grade 2 calls response times decreased during the pandemic. (for grades 3 and 4 the forecast is too noisy). 
 
 ```{r dvresponsebygrade}
 
