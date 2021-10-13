@@ -145,7 +145,7 @@ all_calls_attended_forecast %>%
     scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
     scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
     labs(
-      title = "Attendance rate for all calls for service during 2021 compared to pre-pandemic forecast",
+      title = "Attendance rate for all calls for service during 2020 compared to pre-pandemic forecast",
       subtitle = str_wrap(
         str_glue("Events by week: ", str_c(pull(dates, label), collapse = "; ")), 
         80

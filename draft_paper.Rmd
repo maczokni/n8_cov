@@ -88,15 +88,18 @@ dates <- tribble(
 
 # read in forecasts
 # path to UoM server different for everyone
+all_calls <- read_rds("/Volumes/n8_covid/all_calls_forecast.Rds")
 call_forecasts <- read_rds("/Volumes/n8_covid/call_forecasts.Rds")
 all_rt_forecast <- read_rds("/Volumes/n8_covid/all_resp_time_forecast.Rds")
 by_type_rt_forecast <- read_rds("/Volumes/n8_covid/by_type_rt_forecasts.Rds")
 by_grade_rt_forecast <- read_rds("/Volumes/n8_covid/by_grade_rt_forecasts.Rds")
 all_calls_attended_forecast <- read_rds("/Volumes/n8_covid/all_attended_forecasts.Rds")
 by_type_attended_forecast <- read_rds("/Volumes/n8_covid/by_type_attended_forecasts.Rds")
+attended_by_grade_forecast <- read_rds("/Volumes/n8_covid/attended_by_grade_forecasts.Rds")
 domestic_by_grade_volume_forecasts <- read_rds("/Volumes/n8_covid/domestic_by_grade_volume_forecasts.Rds")
 domestic_by_grade_rt_forecast <- read_rds("/Volumes/n8_covid/domestic_by_grade_rt_forecasts.Rds")
 domestic_by_grade_attended_forecasts <- read_rds("/Volumes/n8_covid/domestic_by_grade_attended_forecasts.Rds")
+by_grade_tos_forecasts <- read_rds("/Volumes/n8_covid/by_grade_tos_forecasts.Rds")
 
 
 
@@ -114,24 +117,26 @@ forecast_chart <- function (forecasts, variable, value) {
                                            "by_grade_rt_forecast", 
                                            "domestic_by_grade_rt_forecast") ~ "Median response time (in minutes)", 
                          df_name %in% c("call_forecasts", 
-                                           "domestic_by_grade_volume_forecasts") ~ "Weekly count of calls for service", 
+                                        "domestic_by_grade_volume_forecasts") ~ "Weekly count of calls for service", 
                          df_name %in% c("by_type_attended_forecast",
-                                        "by_grade_attended_forecast", 
-                                        "domestic_by_grade_attended_forecasts") ~ "Weekly % of calls attended")
+                                        "attended_by_grade_forecast", 
+                                        "domestic_by_grade_attended_forecasts") ~ "Weekly % of calls attended", 
+                         df_name %in% c("by_grade_tos_forecasts") ~ "Median time on scene (in minutes)")
   
   
   # conditionally find actual value column
   actual_col_name <- case_when(df_name %in% c("by_type_rt_forecast", 
                                            "by_grade_rt_forecast",
                                            "domestic_by_grade_rt_forecast") ~ "actual_rt", 
-                         df_name %in% c("call_forecasts", 
-                                           "domestic_by_grade_volume_forecasts") ~ "actual_calls", 
+                         df_name %in% c("call_forecasts",
+                                        "domestic_by_grade_volume_forecasts") ~ "actual_calls", 
                          df_name %in% c("by_type_attended_forecast",
-                                        "by_grade_attended_forecast", 
-                                        "domestic_by_grade_attended_forecasts") ~ "actual_attended")
+                                        "attended_by_grade_forecast", 
+                                        "domestic_by_grade_attended_forecasts") ~ "actual_attended", 
+                         df_name %in% c("by_grade_tos_forecasts") ~ "actual_tos")
   
   forecasts %>% 
-    filter(eval(as.symbol(variable)) == value) %>% 
+    filter(eval(as.symbol(variable)) %in% value) %>% 
     # Occasionally the ARIMA model may produce forecast confidence intervals
     # that are less than zero, which will not show up on the plot because we
     # have set the y axis to start at zero (to make changes in vertical position
@@ -181,7 +186,7 @@ forecast_chart <- function (forecasts, variable, value) {
 
 This paper explores how demand on police time changed during COVID-19 pandemic and lockdown. We consider calls for service for a northwest england police force, using 5 years' pre-pandemic data to establish trends, and build a forecast against which to compare observed data. Specifically we look at how call volume, attendance, and response time changed (or did not change) for different call categories (examples), whether there was a change in how the calls came in (999, police non-emergency, etc) or how these changes differed between severity of call (grade). We further disaggregate calls coming from areas with areas with different socio-demographic characteristics to understand how COVID-19 affected different sections of society differently in terms of incidents which they deemed required police assistance. 
 
-The contribution of this paper is three fold. First, we contribute to the growing literature which aims to better understand demand on police time, and how the pandemic and associated lockdowns influenced this. Second, we disaggregate calls from areas with different socio-demographic characteristic, to understand not only how police demand changed, but the variations in this change between different groups in society. Finally, we showcase temporal forecasting as an appropriate methodological approach to compare what we might have expected to happen in 2020/2021 in the absence of the pandemic, versus the observed data. 
+The contribution of this paper is three fold. First, we contribute to the growing literature which aims to better understand demand on police time, and how the pandemic and associated lockdowns influenced this. Second, we disaggregate calls from areas with different socio-demographic characteristic, to understand not only how police demand changed, but the variations in this change between different groups in society. Finally, we showcase temporal forecasting as an appropriate methodological approach to compare what we might have expected to happen in 2020 in the absence of the pandemic, versus the observed data. 
 
 ## Demand on police time
 
@@ -205,23 +210,197 @@ To answer these questions, we use data containing all calls for service made to 
 
 Overall volume of calls for service made in 2020 were below what we would expect based on past years' data. 
 
-```{r}
+```{r totalcallsfig}
 
 # Total calls fig
+all_calls %>% 
+ mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
+  ggplot() +
+  # Forecast
+  geom_ribbon(
+    aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+    na.rm = TRUE,
+    alpha = 0.5, 
+    fill = "grey80"
+  ) +
+  geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+  # Dates of interest
+  geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+  geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+  # Actual calls
+  geom_line(aes(incident_week, actual_calls)) +
+  geom_point(aes(incident_week, actual_calls, fill = sig), shape = 21) +
+  scale_x_date(date_labels = "%e %b\n%Y", 
+               limits = as.Date(c("2020-01-06", "2020-12-21"))) +
+  scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+  scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+  labs(
+    title = "Change in all calls for service during 2020 compared to pre-pandemic forecast",
+    subtitle = str_wrap(
+      str_glue("Events by week: ", str_c(pull(dates, label), collapse = "; ")), 
+      80
+    ),
+    caption = "Forecast calculated using data up to 31 January 2020",
+    x = NULL,
+    y = "Weekly number of calls",
+    fill = "actual calls significantly different from forecast"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom", plot.title = element_text(face = "bold")) + 
+    xlim(c(min(all_calls$incident_week), ymd("2020-12-14")))
+
+
+
+
+
 
 ```
 
 A higher proportion of calls were attended, and the response time was also shorter than the forecasts.  
 
-```{r}
+```{r allattendedfig}
 
 # % attended fig and response time fig
+all_calls_attended_forecast %>% 
+    mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
+    ggplot() +
+    # Forecast
+    geom_ribbon(
+      aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+      na.rm = TRUE,
+      alpha = 0.5, 
+      fill = "grey80"
+    ) +
+    geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+    # Actual calls
+    geom_line(aes(incident_week, actual_attended)) +
+    geom_point(aes(incident_week, actual_attended, fill = sig), shape = 21) +
+    scale_x_date(date_labels = "%e %b\n%Y") +
+    scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+    scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+    labs(
+      title = "Attendance rate for all calls for service during 2020 compared to pre-pandemic forecast",
+      subtitle = str_wrap(
+        str_glue("Events by week: ", str_c(pull(dates, label), collapse = "; ")), 
+        80
+      ),
+      caption = "Forecast calculated using data up to 31 January 2020",
+      x = NULL,
+      y = "weekly % of calls attended",
+      fill = "actual % significantly different from forecast"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+  
+
+
+```
+
+
+```{r allresptimefig}
+
+all_rt_forecast %>% 
+    mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
+    ggplot() +
+    # Forecast
+    geom_ribbon(
+      aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+      na.rm = TRUE,
+      alpha = 0.5, 
+      fill = "grey80"
+    ) +
+    geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+    # Actual calls
+    geom_line(aes(incident_week, actual_rt)) +
+    geom_point(aes(incident_week, actual_rt, fill = sig), shape = 21) +
+    scale_x_date(date_labels = "%e %b\n%Y") +
+    scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+    scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+    labs(
+      title = "Median response time for all calls for service during 2020 compared to pre-pandemic forecast",
+      caption = "Forecast calculated using data up to 31 January 2020",
+      x = NULL,
+      y = "Median response time in minutes",
+      fill = "Response time significantly different from forecast"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
 
 ```
 
 We present key themes which emerged from our data. 
 
+### Freed up resources
+
+With fewer calls it is likely that officer workload changed (i.e. lowered). This means that we see police responding to a higher proportion of calls than we forecast with the absence of lockdown. Indeed, we tend to see this higher proportion of calls being attended for grade 1 (Emergency Response: Attendance within 15 minutes of call receipt), grade 2 (Priority Response: Attendance within 1 hour of call receipt), grade 3 calls (Routine Response: Attendance within 4 hours), and even in grade 4 calls (Scheduled Response: Attendance or other resolution within 48 hours) (grade 5 calls are not attended, these refer to Telephone Resolution: First-time telephone resolution of a call). 
+
+```{r bygradeattendedperc}
+
+forecast_chart(attended_by_grade_forecast,"initial_grade_of_response", "Grade 1")
+forecast_chart(attended_by_grade_forecast,"initial_grade_of_response", "Grade 2")
+forecast_chart(attended_by_grade_forecast,"initial_grade_of_response", "Grade 3")
+forecast_chart(attended_by_grade_forecast,"initial_grade_of_response", "Grade 4")
+
+
+
+```
+
+
+
+As well as being able to respond to more calls, 2020 also saw quicker response times for calls. Figure X shows median response times by grade. Response times decreased for grade 1, grade 2, and grade 3 calls, the most drastic decrease in the latter category. This suggests that the freed up resources allowed faster responding to routine response calls. There was no difference in response time to those grade 4 calls (these require attendance or other resolution within 48 hours) and grade 5 calls are not attended. 
+
+```{r bygraderesptime}
+
+# Figs for grade 1, 2, 3, and 4 calls response times
+forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 1")
+forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 2")
+forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 3")
+forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 4")
+
+
+```
+
+Another possible explanation for the increased time besides the decrease in call volume is that the calls which did come in required less time on scene. 
+
+```{r bygradetosfigs}
+
+forecast_chart(by_grade_tos_forecasts,"initial_grade_of_response", "Grade 1")
+forecast_chart(by_grade_tos_forecasts,"initial_grade_of_response", "Grade 2")
+forecast_chart(by_grade_tos_forecasts,"initial_grade_of_response", "Grade 3")
+forecast_chart(by_grade_tos_forecasts,"initial_grade_of_response", "Grade 4")
+
+```
+
+Budget for covid cars - also free up resources - these dealt with the ASB? **Ask in interview about "covid cars" and whether these dealt with ASB**
+
+
+
+
+### Quiet streets
+
+Another possible explanation for the decrease in response times of course is the quiet streets. We see that calls related to roads all dropped off in the first lock down, as fewer people were driving. Figures A, B, and C show how calls for highway disruption, traffic collision, and road related traffic offences were all less than would be expected based on previous years' data. 
+
+```{r roadsetcfigs}
+
+# Figs for highway disruption, traffic collision, and road related traffic offences
+forecast_chart(call_forecasts, "incident_type_new" ,"traffic collision")
+forecast_chart(call_forecasts, "incident_type_new" ,"Highway Disruption")
+forecast_chart(call_forecasts, "incident_type_new" ,"Road Related Traffic Offence")
+
+
+```
+
+So not only were fewer calls coming in overall, which required less time to be spent on scene (??) but also the route to them was not so much blocked with traffic. 
+
 ### Shooting fish in a barrel
+
+The quiet streets allowed not only for faster response times, but also for an ease of spotting people out and about doing things they should not be doing. 
 
 - Drug related offences
 
@@ -372,44 +551,6 @@ forecast_chart(domestic_by_grade_rt_forecast,"initial_grade_of_response", "Grade
 
 ```
 
-
-### Freed up resources
-
-Attend more stuff where less time at scene - eg night time economy calls takes people off scene for longer? *check time on scene*
-
-With fewer calls for *list everything that had fewer than pre-covid* it is likely that officer workload changed (i.e. lowered). This meant quicker response times for calls. Figure X shows median response times by grade. Response times decreased for grade 1, grade 2, and grade 3 calls, the most drastic decrease in the latter category. This suggests that the freed up resources allowed faster responding to routine response calls. There was no difference in response time to those grade 4 calls (these require attendance or other resolution within 48 hours) and grade 5 calls are not attended. 
-
-```{r}
-
-# Figs for grade 1, 2, 3, and 4 calls response times
-forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 1")
-forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 2")
-forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 3")
-forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 4")
-
-
-```
-
-
-
-Budget for covid cars - also free up resources - these dealt with the ASB? **Ask in interview about "covid cars" and whether these dealt with ASB**
-
-
-
-
-### Quiet streets
-
-Another possible explanation for the decrease in response times of course is the quiet streets. We see that calls related to roads all dropped off in the first lock down, as fewer people were driving. Figures A, B, and C show how calls for highway disruption, traffic collision, and road related traffic offences were all less than would be expected based on previous years' data. 
-
-```{r roadsetcfigs}
-
-# Figs for highway disruption, traffic collision, and road related traffic offences
-forecast_chart(call_forecasts, "incident_type_new" ,"traffic collision")
-forecast_chart(call_forecasts, "incident_type_new" ,"Highway Disruption")
-forecast_chart(call_forecasts, "incident_type_new" ,"Road Related Traffic Offence")
-
-
-```
 
 
 ### IMD stuff (did the callers change?)

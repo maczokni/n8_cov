@@ -123,7 +123,7 @@ forecast_chart_type <- function (forecasts, types) {
     scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
     scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
     labs(
-      title = "Median response time for all calls for service during 2021 compared to pre-pandemic forecast",
+      title = "Median response time for all calls for service during 2020 compared to pre-pandemic forecast",
       subtitle = str_wrap(
         str_glue("Response time by week: ", str_c(pull(dates, label), collapse = "; ")), 
         80
@@ -285,7 +285,7 @@ all_rt_forecast %>%
     scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
     scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
     labs(
-      title = "Median response time for all calls for service during 2021 compared to pre-pandemic forecast",
+      title = "Median response time for all calls for service during 2020 compared to pre-pandemic forecast",
       caption = "Forecast calculated using data up to 31 January 2020",
       x = NULL,
       y = "Median response time in minutes",

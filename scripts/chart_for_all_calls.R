@@ -163,6 +163,9 @@ dates <- tribble(
     label = str_glue("{row}. {event}")
   )
 
+# Save result for use elsewhere (e.g. in an Rmarkdown document)
+write_rds(final_all_calls, here::here("output/all_calls_forecast.Rds"))
+
 
 final_all_calls %>% 
  mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
