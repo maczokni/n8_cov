@@ -83,6 +83,12 @@ calls <- mutate(
 
 cheshire_calls <- calls %>% filter(lsoa %in% unique(cheshire_imds$LSOA11NM))
 
+lsoa_filler <- bind_rows(data.frame(lsoa = unique(cheshire_imds$LSOA11NM),
+                          pre_post = "Pre-COVID"), 
+                         data.frame(lsoa = unique(cheshire_imds$LSOA11NM),
+                          pre_post = "Post-COVID"))
+                         
+
 plot_imd <- function(inc_type) {
   
   type_calls <- cheshire_calls %>% filter(incident_type_new == inc_type) %>% 
@@ -105,6 +111,35 @@ plot_imd <- function(inc_type) {
   
 }
 
+
+plot_imd_prepost <- function(inc_type) {
+  
+  pre_calls <- cheshire_calls %>% 
+    filter(incident_type_new == inc_type) %>% 
+  mutate(pre_post = ifelse(incident_date_time < dmy("31/01/2020"), "Pre-COVID", "Post-COVID")) %>%   group_by(lsoa, pre_post) %>% count() %>% 
+  left_join(lsoa_filler, .) %>%
+    mutate(n = replace_na(n, 0)) %>% 
+    left_join(., cheshire_imds, by = c("lsoa" = "LSOA11NM")) %>% 
+  filter(!is.na(index_of_multiple_deprivation_imd_decile)) %>%  # check why NAs
+  mutate(n = replace_na(n, 0), 
+         n_per_yr = ifelse(pre_post == "Pre-COVID", n/5,n)) 
+
+labs_df <- pre_calls %>% 
+  group_by(index_of_multiple_deprivation_imd_decile) %>% summarise(n = n_distinct(lsoa))
+
+ p <-  ggplot() + 
+  geom_boxplot(data = pre_calls, aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n_per_yr, color = pre_post)) + 
+  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = max(pre_calls$n_per_yr, na.rm = TRUE) + 10, label = paste0("n = ",n))) +
+  labs(title = "Total calls from LSOAs in each IMD decile pre and post COVID") + 
+  xlab("IMD decile (1 = most and 10 = least deprived)") + 
+  ylab(paste0("Number of ",inc_type," calls (per year)")) + 
+       scale_y_log10() + 
+  theme_bw() + 
+  theme(legend.position = c(0.87, 0.75))
+ return(p)
+  
+}
+
 ```
 
 
@@ -116,11 +151,14 @@ plot_imd <- function(inc_type) {
 ```{r}
 
 total_calls <- cheshire_calls %>% group_by(lsoa) %>% count() %>% 
-  left_join(., imd, by = c("lsoa" =  "lsoa_name_2011")) 
+  left_join(., imd, by = c("lsoa" =  "lsoa_name_2011")) %>%
+  filter(!is.na(index_of_multiple_deprivation_imd_decile))  # check why NAs
 
-labs_df <- total_calls %>% group_by(index_of_multiple_deprivation_imd_decile) %>% count()
 
-ggplot(total_calls %>% filter(!is.na(index_of_multiple_deprivation_imd_decile)), aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n )) + 
+labs_df <- total_calls  %>% 
+  group_by(index_of_multiple_deprivation_imd_decile) %>% count()
+
+ggplot(total_calls , aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n )) + 
   geom_boxplot() + 
   geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = 50000, label = paste0("n = ",n))) + 
   scale_y_log10() + 
@@ -133,12 +171,41 @@ ggplot(total_calls %>% filter(!is.na(index_of_multiple_deprivation_imd_decile)),
 ```
 
 
+```{r prepostcovidbox}
+
+pre_calls <- cheshire_calls %>% 
+  mutate(pre_post = ifelse(incident_date_time < dmy("31/01/2020"), "Pre-COVID", "Post-COVID")) %>%   group_by(lsoa, pre_post) %>% count() %>% 
+  left_join(lsoa_filler, .) %>%
+    mutate(n = replace_na(n, 0)) %>% 
+  left_join(., cheshire_imds, by = c( "lsoa" = "LSOA11NM")) %>%
+  filter(!is.na(index_of_multiple_deprivation_imd_decile)) %>%  # check why NAs
+  mutate(n = replace_na(n, 0), 
+         n_per_yr = ifelse(pre_post == "Pre-COVID", n/5,n)) 
+
+
+labs_df <- pre_calls %>% group_by(pre_post, index_of_multiple_deprivation_imd_decile) %>% count()
+
+
+ggplot(pre_calls, aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n_per_yr, color = pre_post)) + 
+  geom_boxplot() + 
+  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = max(pre_calls$n_per_yr + 100), label = paste0("n = ",n))) +
+  labs(title = "Total calls from LSOAs in each IMD decile pre and post COVID") + 
+  xlab("IMD decile (1 = most and 10 = least deprived)") + 
+  ylab("Number of calls (per year)") + 
+  theme_bw() + 
+  theme(legend.position = c(0.87, 0.75))
+
+```
+
+
 ## Same but by call type
 
 ## Admin
 
 ```{r Admin}
 plot_imd("Advice/Directions/Admin")
+plot_imd_prepost("Advice/Directions/Admin")
+
 ```
 
 
@@ -146,12 +213,15 @@ plot_imd("Advice/Directions/Admin")
 
 ```{r Alarms}
 plot_imd("alarms")
+plot_imd_prepost("alarms")
+
 ```
 
 ## Widlife Concern
 
 ```{r Wildlife}
 plot_imd("animals")
+plot_imd_prepost("animals")
 ```
 
 
@@ -159,6 +229,7 @@ plot_imd("animals")
 
 ```{r ASB}
 plot_imd("ASB")
+plot_imd_prepost("ASB")
 ```
 
 
@@ -168,6 +239,7 @@ plot_imd("ASB")
 
 ```{r Burglary - Commercial}
 plot_imd("Burglary - Business/Commercial")
+plot_imd_prepost("Burglary - Business/Commercial")
 ```
 
 
@@ -176,6 +248,7 @@ plot_imd("Burglary - Business/Commercial")
 
 ```{r Burglary - Residential}
 plot_imd("Burglary - Residential")
+plot_imd_prepost("Burglary - Residential")
 ```
 
 
@@ -185,6 +258,7 @@ plot_imd("Burglary - Residential")
 ```{r Civil Disputes}
 
 plot_imd("Civil Disputes")
+plot_imd_prepost("Civil Disputes")
 ```
 
 
@@ -194,6 +268,7 @@ plot_imd("Civil Disputes")
 ```{r Police Safety}
 
 plot_imd("Code Zero")
+plot_imd_prepost("Code Zero")
 ```
 
 
@@ -202,6 +277,7 @@ plot_imd("Code Zero")
 ```{r Minor Injuries}
 
 plot_imd("Collapse/Illness/Injury/Trapped")
+plot_imd_prepost("Collapse/Illness/Injury/Trapped")
 ```
 
 ## Complaints Against Police
@@ -209,6 +285,7 @@ plot_imd("Collapse/Illness/Injury/Trapped")
 ```{r Compaints Against Police}
 
 plot_imd("Complaints Against Police")
+plot_imd_prepost("Complaints Against Police")
 ```
 
 
@@ -217,6 +294,7 @@ plot_imd("Complaints Against Police")
 
 ```{r Concern For Safety}
 plot_imd("Concern For Safety")
+plot_imd_prepost("Concern For Safety")
 ```
 
 
@@ -224,6 +302,7 @@ plot_imd("Concern For Safety")
 
 ```{r Criminal Damage}
 plot_imd("Criminal Damage")
+plot_imd_prepost("Criminal Damage")
 ```
 
 
@@ -232,6 +311,7 @@ plot_imd("Criminal Damage")
 
 ```{r Domestic Incident}
 plot_imd("Domestic Incident")
+plot_imd_prepost("Domestic Incident")
 ```
 
 
@@ -242,6 +322,7 @@ plot_imd("Domestic Incident")
 
 ```{r Drug Related Offences}
 plot_imd("Drugs")
+plot_imd_prepost("Drugs")
 ```
 
 
@@ -252,6 +333,7 @@ plot_imd("Drugs")
 
 ```{r Firearms}
 plot_imd("firearms")
+plot_imd_prepost("firearms")
 ```
 
 
@@ -261,6 +343,7 @@ plot_imd("firearms")
 
 ```{r Fraud}
 plot_imd("Fraud")
+plot_imd_prepost("Fraud")
 ```
 
 
@@ -270,6 +353,7 @@ plot_imd("Fraud")
 
 ```{r Hate Incident}
 plot_imd("Hate Incident")
+plot_imd_prepost("Hate Incident")
 ```
 
 
@@ -278,6 +362,7 @@ plot_imd("Hate Incident")
 
 ```{r Highway Disruption}
 plot_imd("Highway Disruption")
+plot_imd_prepost("Highway Disruption")
 ```
 
 
@@ -287,6 +372,7 @@ plot_imd("Highway Disruption")
 
 ```{r Missing Person}
 plot_imd("Missing Person")
+plot_imd_prepost("Missing Person")
 ```
 
 
@@ -295,6 +381,7 @@ plot_imd("Missing Person")
 
 ```{r Other -Admin Calls}
 plot_imd("other - admin")
+plot_imd_prepost("other - admin")
 ```
 
 
@@ -303,6 +390,7 @@ plot_imd("other - admin")
 
 ```{r Other - minor}
 plot_imd("other - minor")
+plot_imd_prepost("other - minor")
 ```
 
 
@@ -311,6 +399,7 @@ plot_imd("other - minor")
 
 ```{r Police Generated}
 plot_imd("Police Generated")
+plot_imd_prepost("Police Generated")
 ```
 
 
@@ -320,6 +409,7 @@ plot_imd("Police Generated")
 
 ```{r Breach of Peace}
 plot_imd("Prevent Potential Breach of the Peace")
+plot_imd_prepost("Prevent Potential Breach of the Peace")
 ```
 
 
@@ -329,6 +419,7 @@ plot_imd("Prevent Potential Breach of the Peace")
 
 ```{r Property Lost/Found}
 plot_imd("Property Lost/Found")
+plot_imd_prepost("Property Lost/Found")
 ```
 
 
@@ -338,6 +429,7 @@ plot_imd("Property Lost/Found")
 
 ```{r Road Related Traffic}
 plot_imd("Road Related Traffic Offence")
+plot_imd_prepost("Road Related Traffic Offence")
 ```
 
 
@@ -345,6 +437,7 @@ plot_imd("Road Related Traffic Offence")
 
 ```{r Robbery}
 plot_imd("Robbery")
+plot_imd_prepost("Robbery")
 ```
 
 
@@ -353,6 +446,7 @@ plot_imd("Robbery")
 
 ```{r Sexual Offences}
 plot_imd("Sexual Offences")
+plot_imd_prepost("Sexual Offences")
 ```
 
 
@@ -362,6 +456,7 @@ plot_imd("Sexual Offences")
 
 ```{r Shoplifting}
 plot_imd("Shoplifting")
+plot_imd_prepost("Shoplifting")
 ```
 
 
@@ -370,6 +465,7 @@ plot_imd("Shoplifting")
 
 ```{r Sudden Death}
 plot_imd("Sudden Death")
+plot_imd_prepost("Sudden Death")
 ```
 
 
@@ -378,6 +474,8 @@ plot_imd("Sudden Death")
 
 ```{r Suspicious Activity}
 plot_imd("Suspicious Activity")
+plot_imd_prepost("Suspicious Activity")
+
 ```
 
 
@@ -386,6 +484,8 @@ plot_imd("Suspicious Activity")
 
 ```{r Suspicious Package}
 plot_imd("Suspicious Package")
+plot_imd_prepost("Suspicious Package")
+
 ```
 
 
@@ -394,6 +494,8 @@ plot_imd("Suspicious Package")
 
 ```{r Theft From Motor Vehicle}
 plot_imd("Theft From Motor Vehicle")
+plot_imd_prepost("Theft From Motor Vehicle")
+
 ```
 
 
@@ -403,6 +505,8 @@ plot_imd("Theft From Motor Vehicle")
 
 ```{r Theft of Motor Vehicle}
 plot_imd("Theft Of Motor Vehicle")
+plot_imd_prepost("Theft Of Motor Vehicle")
+
 ```
 
 
@@ -411,6 +515,8 @@ plot_imd("Theft Of Motor Vehicle")
 
 ```{r Theft Other}
 plot_imd("Theft Other")
+  plot_imd_prepost("Theft Other")
+
 ```
 
 
@@ -419,6 +525,8 @@ plot_imd("Theft Other")
 
 ```{r Traffic Collisions}
 plot_imd("traffic collision")
+plot_imd_prepost("traffic collision")
+
 ```
 
 
@@ -427,6 +535,8 @@ plot_imd("traffic collision")
 
 ```{r Violence/Harassment}
 plot_imd("Violence/Harassment")
+plot_imd_prepost("Violence/Harassment")
+
 ```
 
 
@@ -436,6 +546,7 @@ plot_imd("Violence/Harassment")
 
 ```{r Warrant/Bail}
 plot_imd("warrant/bail issue")
+plot_imd_prepost("warrant/bail issue")
 ```
 
 
