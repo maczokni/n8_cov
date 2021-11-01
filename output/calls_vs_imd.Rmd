@@ -14,15 +14,22 @@ library(lubridate)
 library(tsibble)
 library(tidyverse)
 library(readxl)
+library(sf)
 
 # Read and clean data
 
 # excel_sheets("File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx")
 # imd <- read_xlsx(here::here("File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx", sheet = "IMD2019"))  %>%  janitor::clean_names()
 
-imd <- read_xlsx("C:\\Users\\maczo\\Desktop\\research\\n8_cov\\File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx", sheet = "IMD2019") %>%  janitor::clean_names()
+# imd <- read_xlsx("C:\\Users\\maczo\\Desktop\\research\\n8_cov\\File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx", sheet = "IMD2019") %>%  janitor::clean_names()
 
-calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
+imd <- read_xlsx("/Users/reka/Dropbox (The University of Manchester)/N8_covid/analysis/n8_covid/File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx", sheet = "IMD2019") %>%  janitor::clean_names()
+
+cheshire_lsoas <- st_read("../cheshire_lsoas.geojson")
+cheshire_imds <- left_join(cheshire_lsoas, imd, by = c("LSOA11NM" = "lsoa_name_2011"))
+
+# calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
+calls <- read_csv("/Volumes/n8_covid/n8_data_v2.csv.gz") %>%  janitor::clean_names()
 
 minor_categories <- calls %>% 
   count(incident_type) %>% 
@@ -74,12 +81,14 @@ calls <- mutate(
   )
 )
 
+cheshire_calls <- calls %>% filter(lsoa %in% unique(cheshire_imds$LSOA11NM))
+
 plot_imd <- function(inc_type) {
   
-  type_df <- calls %>% filter(incident_type_new == inc_type)
-  
-  type_calls <- type_df %>% group_by(lsoa) %>% count() %>% 
-    left_join(., imd, by = c("lsoa" =  "lsoa_name_2011")) 
+  type_calls <- cheshire_calls %>% filter(incident_type_new == inc_type) %>% 
+    group_by(lsoa) %>% count() %>% 
+    left_join(cheshire_imds, ., by = c("LSOA11NM" = "lsoa")) %>% 
+    mutate(n = replace_na(n, 0))
   
   labs_df <- type_calls %>% group_by(index_of_multiple_deprivation_imd_decile) %>% count()
   
@@ -99,11 +108,14 @@ plot_imd <- function(inc_type) {
 ```
 
 
+**NOTE** there are 17 LSOAs where the IMD ranking isn't there? It's not in the spreadsheet, IDK why so need to check. They are: `r cheshire_imds %>% filter(is.na(index_of_multiple_deprivation_imd_decile)) %>% pull(LSOA11NM)`
+
+
 ## Total calls by IMD decile
 
 ```{r}
 
-total_calls <- calls %>% group_by(lsoa) %>% count() %>% 
+total_calls <- cheshire_calls %>% group_by(lsoa) %>% count() %>% 
   left_join(., imd, by = c("lsoa" =  "lsoa_name_2011")) 
 
 labs_df <- total_calls %>% group_by(index_of_multiple_deprivation_imd_decile) %>% count()

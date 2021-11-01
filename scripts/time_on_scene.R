@@ -141,7 +141,7 @@ attended_calls %>%
   theme_bw() +
   scale_x_continuous(trans = scales::pseudo_log_trans()) + 
   labs(title = "Distribution of time on scene across all calls")+ 
-  xlab("Response time in minutes") + 
+  xlab("Time on scene in minutes") + 
   theme(axis.text.y = element_blank(), 
         axis.ticks.y = element_blank()) + 
   facet_wrap(~initial_grade_of_response, ncol = 1)

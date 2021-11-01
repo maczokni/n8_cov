@@ -101,7 +101,7 @@ domestic_by_grade_rt_forecast <- read_rds("/Volumes/n8_covid/domestic_by_grade_r
 domestic_by_grade_attended_forecasts <- read_rds("/Volumes/n8_covid/domestic_by_grade_attended_forecasts.Rds")
 by_grade_tos_forecasts <- read_rds("/Volumes/n8_covid/by_grade_tos_forecasts.Rds")
 
-
+imd <- read_xlsx("File_1_-_IMD2019_Index_of_Multiple_Deprivation.xlsx", sheet = "IMD2019") %>%  janitor::clean_names()
 
 # Chart code
 # specify the forecast (the df of the forecast), the variable we're modelling ("incident_type_new", "initial_grade_of_response"), and the value we're filtering on (e.g. "ASB" or "Grade 1"). 
