@@ -1,3 +1,13 @@
+---
+title: "Shift patterns"
+author: "RS MA NK EK"
+date: "06/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
 library(lubridate)
 library(tsibble)
 library(tidyverse)
@@ -19,64 +29,21 @@ calls$time <- case_when(calls$hour >= 5 & calls$hour < 11 ~ "Early",
                         calls$hour >= 23 | calls$hour < 5 ~ "Late", 
                         TRUE ~ NA_character_)
 calls$time <- factor(calls$time, levels = c("Early","Daytime","Evening","Late"))
-
-# plot
-calls %>% 
-  mutate(week = as_date(yearweek(incident_date_time))) %>% 
-  count(time, week) %>% 
-  ggplot(aes(x = week, y = n, fill = time)) +
-  geom_area(position = "fill") +
-  # First UK case
-  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
-  # First UK lockdown begins
-  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
-  # First UK lockdown ends
-  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
-  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  scale_fill_brewer(type = "qual") + 
-  labs(
-    title = "Proportion of all Incidents by Time of Day",
-    x = NULL,
-    y = "Proportion",
-    fill = "Time of Day"
-  ) +
-  theme_minimal() +
-  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
-
 calls <- calls %>% 
   mutate(inc_date = floor_date(ymd_hms(incident_date_time), unit = "day"))
 
+```
+
+## Change in call times
+
+We also wanted to explore whether there was any shift in the time where calls were being made. Either for day of the week, or hour of the day (and also how these map into shift patterns). 
+
+Overall we find no real differences. 
+
+## Day of the week
 
 
-# Calendar plot for all calls
-daily_count <- calls %>% 
-  group_by(inc_date) %>% 
-  count() 
-
-  ggplot_calendar_heatmap(daily_count,  
-  cDateColumnName = 'inc_date', # column name of the dates
-  cValueColumnName = 'n') + # column name of the data
-  xlab(NULL) + # x axis lable
-  ylab(NULL) + # y axis lable
-  scale_fill_continuous(low = '#f7fcfd',  # set colour for low count
-                        high = '#6e016b') +   # set colour for high count
-  facet_wrap(~Year, ncol = 1) +  # separate out by each year
-  theme_minimal()
-  
-# without that one Thursday
-
-  ggplot_calendar_heatmap(daily_count %>% filter(inc_date != ymd('2017-02-23')),  
-                          cDateColumnName = 'inc_date', # column name of the dates
-                          cValueColumnName = 'n') + # column name of the data
-    xlab(NULL) + # x axis lable
-    ylab(NULL) + # y axis lable
-    scale_fill_continuous(low = '#f7fcfd',  # set colour for low count
-                          high = '#6e016b') +   # set colour for high count
-    facet_wrap(~Year, ncol = 1) +  # separate out by each year
-    theme_minimal()
-  
-  
+```{r dayofweekradar}
 
 # try for radar chart for pre 2020
   
@@ -123,7 +90,16 @@ line_cols <- c('#7570b3', '#1b9e77')
 radarchart(radar_df, pcol = line_cols, plwd = 4, plty = 1)
 legend(x=0.8, y=1.4, legend = c("Pre-pandemic", "2020"), bty = "n", pch=20 , col=line_cols , text.col = "black", cex=1.2)
 
-# Do the same for shift patterns
+
+```
+
+
+## Shift patterns
+
+To look at shift patterns we coded calls made on or after 05:00 until before 11:00 as "Early", calls made on or after 11 until before 17:00 as "Daytime", calls made on or after 17:00 until before 23:00 as "Evening" and calls made on or after 23:00 until before 05:00 as "Late". 
+
+
+```{r shiftradar}
 
 calls$time <- factor(calls$time, levels = c("Early", "Late", "Evening", "Daytime"))
 
@@ -159,7 +135,7 @@ wide_time_2020 <- time_count_2020 %>%
 rownames(wide_time_2020) <- "2020"
 
 # bind together
-radar_df <- rbind(rep(max(time_count_pre$avg_calls)+10, 7),
+radar_df <- rbind(rep(max(time_count_pre$avg_calls)+30, 7),
                   rep(min(time_count_2020$avg_calls)-10, 7), 
                   wide_time_pre, 
                   wide_time_2020)
@@ -172,11 +148,13 @@ radarchart(radar_df, pcol = line_cols, plwd = 4, plty = 1)
 legend(x=0.8, y=1.4, legend = c("Pre-pandemic", "2020"), bty = "n", pch=20 , col=line_cols , text.col = "black", cex=1.2)
 
 
-# Can break down by hour if we want...  
+```
 
+## Hour of the day
 
+Finally we can look more granularly at hourly calls, but still, we see no different patterns between calls made before 13/01/2020 and those made after, during the lockdown. 
 
-# try for radar chart for pre 2020
+```{r radarbyhour}
 
 hour_count_pre <- calls %>% 
   filter(inc_date < dmy('31-01-2020')) %>% 
@@ -220,3 +198,5 @@ radarchart(radar_df[,c(1, 24:2)], pcol = line_cols, plwd = 4, plty = 1)
 legend(x=0.8, y=1.4, legend = c("Pre-pandemic", "2020"), bty = "n", pch=20 , col=line_cols , text.col = "black", cex=1.2)
 
 
+
+```

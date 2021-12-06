@@ -7,7 +7,7 @@ library(tidyverse)
 # Read and clean data
 calls <- read_csv("../cheshire-calls/cheshire_raw_data.csv.gz") %>% # USE CORRECT PATH FOR CLEAN DATA FILE ON YOUR COMPUTER
   janitor::clean_names()
-calls <- read_csv("../Volumes/n8_covid/n8_data.csv.gz") %>% # USE CORRECT PATH FOR CLEAN DATA FILE ON YOUR COMPUTER
+calls <- read_csv("/Volumes/n8_covid/n8_data_v2.csv.gz") %>% # USE CORRECT PATH FOR CLEAN DATA FILE ON YOUR COMPUTER
   janitor::clean_names()
   
 # Find categories with fewer than a certain number of calls so we can exclude
