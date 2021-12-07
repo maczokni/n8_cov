@@ -86,7 +86,7 @@ cheshire_calls <- calls %>% filter(lsoa %in% unique(cheshire_imds$LSOA11NM))
 lsoa_filler <- bind_rows(data.frame(lsoa = unique(cheshire_imds$LSOA11NM),
                           pre_post = "Pre-COVID"), 
                          data.frame(lsoa = unique(cheshire_imds$LSOA11NM),
-                          pre_post = "Post-COVID"))
+                          pre_post = "2020"))
                          
 
 plot_imd <- function(inc_type) {
@@ -116,24 +116,32 @@ plot_imd_prepost <- function(inc_type) {
   
   pre_calls <- cheshire_calls %>% 
     filter(incident_type_new == inc_type) %>% 
-  mutate(pre_post = ifelse(incident_date_time < dmy("31/01/2020"), "Pre-COVID", "Post-COVID")) %>%   group_by(lsoa, pre_post) %>% count() %>% 
+  mutate(pre_post = ifelse(incident_date_time < dmy("31/01/2020"), "Pre-COVID", "2020"), 
+         pre_post = factor(pre_post, levels = c("Pre-COVID", "2020")), 
+         inc_wk = yearweek(incident_date_time)) %>%  
+    group_by(lsoa, pre_post, inc_wk) %>% 
+    count() %>% 
+    group_by(lsoa, pre_post) %>% summarise(avg_wkly_calls = mean(n, na.rm=TRUE)) %>% 
   left_join(lsoa_filler, .) %>%
-    mutate(n = replace_na(n, 0)) %>% 
+    mutate(avg_wkly_calls = replace_na(avg_wkly_calls, 0)) %>% 
     left_join(., cheshire_imds, by = c("lsoa" = "LSOA11NM")) %>% 
   filter(!is.na(index_of_multiple_deprivation_imd_decile)) %>%  # check why NAs
-  mutate(n = replace_na(n, 0), 
-         n_per_yr = ifelse(pre_post == "Pre-COVID", n/5,n)) 
+  mutate(avg_wkly_calls = replace_na(avg_wkly_calls, 0)) 
 
 labs_df <- pre_calls %>% 
   group_by(index_of_multiple_deprivation_imd_decile) %>% summarise(n = n_distinct(lsoa))
 
  p <-  ggplot() + 
-  geom_boxplot(data = pre_calls, aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n_per_yr, color = pre_post)) + 
-  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = max(pre_calls$n_per_yr, na.rm = TRUE) + 10, label = paste0("n = ",n))) +
-  labs(title = "Total calls from LSOAs in each IMD decile pre and post COVID") + 
+  geom_boxplot(data = pre_calls, aes(x = as.factor(index_of_multiple_deprivation_imd_decile), 
+                                     y = avg_wkly_calls, 
+                                     color = factor(pre_post, levels =  c("Pre-COVID", "2020")))) + 
+  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, 
+                                 y = max(pre_calls$avg_wkly_calls, na.rm = TRUE) + (max(pre_calls$avg_wkly_calls, na.rm = TRUE)/4), 
+                                 label = paste0("n = ",n))) +
+  labs(title = "Average weekly calls from LSOAs in each IMD decile pre-COVID and 2020") + 
   xlab("IMD decile (1 = most and 10 = least deprived)") + 
-  ylab(paste0("Number of ",inc_type," calls (per year)")) + 
-       scale_y_log10() + 
+  ylab(paste0("Average number of ",inc_type," calls (per week)")) + 
+  scale_color_brewer("",type = "qual", palette = 2) +  
   theme_bw() + 
   theme(legend.position = c(0.87, 0.75))
  return(p)
@@ -174,25 +182,30 @@ ggplot(total_calls , aes(x = as.factor(index_of_multiple_deprivation_imd_decile)
 ```{r prepostcovidbox}
 
 pre_calls <- cheshire_calls %>% 
-  mutate(pre_post = ifelse(incident_date_time < dmy("31/01/2020"), "Pre-COVID", "Post-COVID")) %>%   group_by(lsoa, pre_post) %>% count() %>% 
+  mutate(pre_post = ifelse(incident_date_time < dmy("31/01/2020"), "Pre-COVID", "2020"), 
+         inc_wk = yearweek(incident_date_time)) %>%   
+  group_by(lsoa, pre_post, inc_wk) %>% count() %>% 
+  group_by(lsoa, pre_post) %>%  summarise(avg_wk_calls = mean(n, na.rm = TRUE)) %>% 
   left_join(lsoa_filler, .) %>%
-    mutate(n = replace_na(n, 0)) %>% 
+    mutate(avg_wk_calls = replace_na(avg_wk_calls, 0)) %>% 
   left_join(., cheshire_imds, by = c( "lsoa" = "LSOA11NM")) %>%
   filter(!is.na(index_of_multiple_deprivation_imd_decile)) %>%  # check why NAs
-  mutate(n = replace_na(n, 0), 
-         n_per_yr = ifelse(pre_post == "Pre-COVID", n/5,n)) 
+  mutate(avg_wk_calls = replace_na(avg_wk_calls, 0)) 
 
 
 labs_df <- pre_calls %>% group_by(pre_post, index_of_multiple_deprivation_imd_decile) %>% count()
 
 
-ggplot(pre_calls, aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n_per_yr, color = pre_post)) + 
-  geom_boxplot() + 
-  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = max(pre_calls$n_per_yr + 100), label = paste0("n = ",n))) +
-  labs(title = "Total calls from LSOAs in each IMD decile pre and post COVID") + 
+ggplot() + 
+  geom_boxplot(data = pre_calls, aes(x = as.factor(index_of_multiple_deprivation_imd_decile), 
+                      y = avg_wk_calls, 
+                      color = factor(pre_post, levels =  c("Pre-COVID", "2020")))) + 
+  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = max(pre_calls$avg_wk_calls + 20), label = paste0("n = ",n))) +
+  labs(title = "Average weekly calls from LSOAs in each IMD decile pre and post COVID") + 
   xlab("IMD decile (1 = most and 10 = least deprived)") + 
-  ylab("Number of calls (per year)") + 
+  ylab("Average weekly calls") + 
   theme_bw() + 
+  scale_color_brewer("",type = "qual", palette = 2) + 
   theme(legend.position = c(0.87, 0.75))
 
 ```
@@ -550,7 +563,28 @@ plot_imd_prepost("warrant/bail issue")
 ```
 
 
+# What about change over time for each IMD
 
+
+```{r}
+
+weekly_count_by_lsoa <- cheshire_calls %>% 
+   mutate(inc_wk = yearweek(incident_date_time)) %>%   
+   group_by(lsoa, inc_wk) %>% count() %>% 
+  left_join(lsoa_filler, .) %>%
+    mutate(n = replace_na(n, 0)) %>% 
+    left_join(., cheshire_imds, by = c("lsoa" = "LSOA11NM")) %>% 
+  filter(!is.na(index_of_multiple_deprivation_imd_decile)) %>%  # check why NAs
+  mutate(n = replace_na(n, 0)) %>% 
+  group_by(index_of_multiple_deprivation_imd_decile, inc_wk) %>% 
+  summarise(avg_weekly_call = mean(n, na.rm = T), 
+            n_per_lsoa = n/n())
+# 
+# ggplot(weekly_count_by_lsoa, aes(x = inc_wk, y = avg_weekly_call, colour = as.factor(index_of_multiple_deprivation_imd_decile))) +
+#   geom_point() + 
+#   geom_line()
+
+```
 
 
 
