@@ -1,0 +1,288 @@
+---
+title: "IMD and calls"
+author: "RS MA NK EK"
+date: "28/01/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Load packages
+library(lubridate)
+library(tidyverse)
+library(tsibble)
+library(sf)
+
+
+cheshire_lsoas <- st_read("../cheshire_lsoas.geojson")
+
+# calls <- read_csv("Z:\\n8_data_v2.csv.gz") %>%  janitor::clean_names()
+calls <- read_csv("/Volumes/n8_covid/n8_data_v2.csv.gz") %>%  janitor::clean_names()
+
+minor_categories <- calls %>% 
+  count(incident_type) %>% 
+  filter(n < 1000) %>% 
+  pull(incident_type)
+
+# Categorise calls
+calls <- mutate(
+  calls,
+  incident_type_new = case_when(
+    incident_type %in% c("Distraction Burglary") ~
+      "Burglary - Residential",
+    incident_type %in% c(
+      "Assistance to Other Agencies",
+      "CRB Use Only",
+      "CSI To Be Informed",
+      "External System",
+      "Found Stolen Vehicle",
+      "Message to Pass/OOF Enquiries",
+      "PNC Markers",
+      "Police Vehicle Recovery",
+      "Pre-Planned Events",
+      "Stop Search",
+      "Training"
+    ) ~ "other - admin",
+    incident_type %in% c(
+      "Alarm - Activation", 
+      "Alarm - No Response", 
+      "Audible Only Alarm",
+      "Insecure Premises",
+      "Police Installed Alarm",
+      "Unauthorised Encampment"
+    ) ~ "alarms",
+    incident_type %in% c(
+      "Bail Breaches/Wanted Person",
+      "Bail/Curfew/Wanted",
+      "Prison Licence Recall",
+      "Warrant Crown Court"
+    ) ~ "warrant/bail issue",
+    incident_type %in% c("Domestic Animal Concern", "Wildlife Matters") ~ 
+      "animals",
+    incident_type %in% c(
+      "Firearms - Non Notifiable Crime",
+      "Firearms Involved Crime"
+    ) ~ "firearms",
+    incident_type %in% c("RTC", "RTC - Damage Only") ~ "traffic collision",
+    incident_type %in% minor_categories ~ "other - minor",
+    TRUE ~ incident_type
+  )
+)
+
+cheshire_calls <- calls %>% filter(lsoa %in% unique(cheshire_lsoas$LSOA11NM))
+
+           
+```
+
+## Overview
+
+
+Since the 1970s the Ministry of Housing, Communities and Local Government and its predecessors have calculated local measures of deprivation in England. The Index of Multiple Deprivation (IMD) is the official measure of relative deprivation in England. The IMD is based on 39 separate indicators, organised across seven distinct domains of deprivation, which combine to produce an overall measure of multiple deprivation experienced by people living in an area. All neighbourhoods (LSOAs) in England are ranked according to their level of deprivation relative to that of other areas. High ranking LSOAs or neighbourhoods can be referred to as the ‘most deprived’ or as being ‘highly deprived’ to aid interpretation. However, there is no definitive threshold above which an area is described as ‘deprived’. The Indices of Deprivation measure deprivation on a relative rather than an absolute scale, so a neighbourhood ranked 100th is more deprived then a neighbourhood ranked 200th, but this does not mean it is twice as deprived. [Ministry of Housing, Communities and Local Government](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/835115/IoD2019_Statistical_Release.pdf).
+
+In this report we will categorise areas by dividing them into 10 equal groups (or deciles) according to their deprivation rank. 
+
+In Cheshire, there are LSOAs whcih fall into all 10 of the deciles. Areas shaded dark red are in the most deprived 10 per cent (or decile) of neighbourhoods in England while areas dark blue are in the least deprived 10 per cent.
+
+
+```{r imdmap}
+
+ggplot() + 
+  geom_sf(data = cheshire_lsoas, aes(fill = as.factor(index_of_multiple_deprivation_imd_decile)), 
+          lwd = 0.01, colour = "white") + 
+  scale_fill_brewer(palette = "RdYlBu") + 
+  labs(fill = "IMD decile") + 
+  theme_void()
+
+
+```
+
+
+However looking at the number of LSOAs which fall into each decile, we can see there are quite a lot of LSOAs which fall into the less deprived categories: 
+
+
+```{r lsoaperimgdec}
+
+ggplot(cheshire_lsoas %>% group_by(index_of_multiple_deprivation_imd_decile) %>% count(), 
+       aes(x = forcats::fct_rev(as.factor(index_of_multiple_deprivation_imd_decile)), y = n)) + 
+  geom_bar(aes(fill = as.factor(index_of_multiple_deprivation_imd_decile)), stat = "identity") + 
+  scale_fill_brewer(palette = "RdYlBu" ) + 
+  labs(fill = "IMD decile") + 
+  xlab("IMD decile") + 
+  ylab("Number of LSOAs") +
+  coord_flip() + 
+  theme_minimal()
+
+
+```
+
+
+## Volume of calls
+
+Overall we see more calls for service from LSOAs in the more deprived areas than from LSOAs in the less deprived areas. 
+
+```{r }
+
+total_calls <- cheshire_calls %>% group_by(lsoa) %>% count() %>% 
+  left_join(., cheshire_lsoas %>% st_drop_geometry(), by = c("lsoa" =  "LSOA11NM")) %>%
+  filter(!is.na(index_of_multiple_deprivation_imd_decile))  # check why NAs
+
+
+labs_df <- total_calls  %>% 
+  group_by(index_of_multiple_deprivation_imd_decile) %>% count()
+
+ggplot(total_calls , aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n )) + 
+  geom_boxplot(aes(fill = as.factor(index_of_multiple_deprivation_imd_decile)), alpha = 0.8) + 
+  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = 50000, label = paste0("n = ",n))) + 
+  scale_fill_brewer(palette = "RdYlBu") + 
+  scale_y_log10() + 
+  labs(title = "Total calls from LSOAs in each IMD decile 2015-2020") + 
+  xlab("IMD decile (1 = most and 10 = least deprived)") + 
+  ylab("Number of calls (all types)") + 
+  labs(fill = "IMD") + 
+  theme_bw()
+
+```
+
+
+We can compare this distribution before the first COVID-19 case in the UK on 23rd January, 2020 (labelled Pre-COVID) compared to calls made after that date (labelled 2020). 
+
+```{r prepostcovidbox}
+
+lsoa_filler <- bind_rows(data.frame(lsoa = unique(cheshire_lsoas$LSOA11NM),
+                          pre_post = "Pre-COVID"), 
+                         data.frame(lsoa = unique(cheshire_lsoas$LSOA11NM),
+                          pre_post = "2020"))
+
+pre_calls <- cheshire_calls %>% 
+  mutate(pre_post = ifelse(incident_date_time < dmy("23/01/2020"), "Pre-COVID", "2020"), 
+         inc_wk = yearweek(incident_date_time)) %>%   
+  group_by(lsoa, pre_post, inc_wk) %>% count() %>% 
+  group_by(lsoa, pre_post) %>%  summarise(avg_wk_calls = mean(n, na.rm = TRUE)) %>% 
+  left_join(lsoa_filler, .) %>%
+    mutate(avg_wk_calls = replace_na(avg_wk_calls, 0)) %>% 
+  left_join(., cheshire_lsoas %>% st_drop_geometry(), by = c( "lsoa" = "LSOA11NM")) %>%
+  filter(!is.na(index_of_multiple_deprivation_imd_decile)) %>%  # check why NAs
+  mutate(avg_wk_calls = replace_na(avg_wk_calls, 0)) 
+
+
+labs_df <- pre_calls %>% group_by(pre_post, index_of_multiple_deprivation_imd_decile) %>% count()
+my_colors <- RColorBrewer::brewer.pal(10, "RdYlBu")[c(10,1)]
+
+ggplot() + 
+  geom_boxplot(data = pre_calls, aes(x = as.factor(index_of_multiple_deprivation_imd_decile), 
+                      y = avg_wk_calls, 
+                      color = factor(pre_post, levels =  c("Pre-COVID", "2020")))) + 
+  geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = max(pre_calls$avg_wk_calls + 20), label = paste0("n = ",n))) +
+  labs(title = "Average weekly calls from LSOAs in each IMD decile pre and post COVID") + 
+  xlab("IMD decile (1 = most and 10 = least deprived)") + 
+  ylab("Average weekly calls") + 
+  theme_bw() + 
+  scale_color_manual("",values = my_colors) + 
+  theme(legend.position = c(0.87, 0.75)) + 
+  scale_y_log10()
+
+```
+
+We can see that over time a steady pattern whereby larger proportion of the calls are coming from the areas which score lower on the index (i.e. are more deprived). We consider the proportion of calls coming from each decile of IMD (accounting for the uneven number of LSOAs in each decile): 
+
+
+```{r}
+
+
+
+weekly_count_by_lsoa <- cheshire_calls %>% 
+   mutate(inc_wk = as_date(yearweek(incident_date_time))) %>%   
+   group_by(lsoa, inc_wk) %>% count() %>% 
+  left_join(lsoa_filler, .) %>%
+    mutate(n = replace_na(n, 0)) %>% 
+    left_join(., cheshire_lsoas %>% st_drop_geometry(), by = c("lsoa" = "LSOA11NM")) %>% 
+  filter(!is.na(index_of_multiple_deprivation_imd_decile)) # check why NAs
+
+firstweek <- min(weekly_count_by_lsoa$inc_wk)
+lastweek <- max(weekly_count_by_lsoa$inc_wk)
+
+
+weekly_count_by_lsoa <- weekly_count_by_lsoa %>% 
+  filter(inc_wk > firstweek & inc_wk < lastweek) 
+
+num_lsoa_per_decile <- weekly_count_by_lsoa %>% 
+  select(lsoa, index_of_multiple_deprivation_imd_decile) %>% 
+  distinct() %>% 
+  group_by(index_of_multiple_deprivation_imd_decile) %>% 
+  count() %>% 
+  rename(num_lsoas = n)
+
+thing <- weekly_count_by_lsoa %>% 
+  left_join(., num_lsoa_per_decile, by = c("index_of_multiple_deprivation_imd_decile" = "index_of_multiple_deprivation_imd_decile")) %>% 
+  select(inc_wk, n, index_of_multiple_deprivation_imd_decile, num_lsoas)  %>% 
+  group_by(inc_wk, index_of_multiple_deprivation_imd_decile, num_lsoas) %>%
+  summarise(n = sum(n)) %>%
+  mutate(calls_per_lsoa = n/num_lsoas) %>% 
+  group_by(inc_wk, index_of_multiple_deprivation_imd_decile) %>%
+  summarise(calls_per_lsoa = calls_per_lsoa) %>% 
+    mutate(percentage = calls_per_lsoa / sum(calls_per_lsoa))
+
+# Plot
+ggplot(thing, aes(x=inc_wk, y=percentage, fill=as.factor(index_of_multiple_deprivation_imd_decile))) + 
+    geom_area(alpha= 1 , size=0.001, colour="black") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  geom_label(aes(as.Date("2020-01-23"), 0, label = "1"), fill = "white", colour = "grey20", nudge_y = -0.05) +
+  geom_label(aes(as.Date("2020-03-23"), 0, label = "2"), fill = "white", colour = "grey20", nudge_y = -0.05) +
+  geom_label(aes(as.Date("2020-06-01"), 0, label = "3"), fill = "white", colour = "grey20", nudge_y = -0.05) +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual", palette = "RdYlBu") + 
+  labs(
+    title = "Proportion of Calls from different IMD deciles",
+    subtitle = "1: First UK Case, 2: Lockdown begins, 3: Lockdown ends",
+    x = NULL,
+    y = "Proportion",
+    fill = "IMD decile"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
+
+
+```
+
+
+We can zoom into the time period immediately preceding and following the lockdown period, however we see no real shift in where the calls were coming from in terms of the levels of deprivation in these areas. 
+
+```{r}
+
+
+
+# Plot
+ggplot(thing %>% filter(inc_wk > as.Date("2019-10-10")), 
+       aes(x=inc_wk, y=percentage, fill=as.factor(index_of_multiple_deprivation_imd_decile))) + 
+    geom_area(alpha= 1 , size=0.001, colour="black") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  geom_label(aes(as.Date("2020-01-23"), 0, label = "1"), fill = "white", colour = "grey20", nudge_y = -0.05) +
+  geom_label(aes(as.Date("2020-03-23"), 0, label = "2"), fill = "white", colour = "grey20", nudge_y = -0.05) +
+  geom_label(aes(as.Date("2020-06-01"), 0, label = "3"), fill = "white", colour = "grey20", nudge_y = -0.05) +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual", palette = "RdYlBu") + 
+  labs(
+    title = "Proportion of Calls from different IMD deciles",
+    subtitle = "1: First UK Case, 2: Lockdown begins, 3: Lockdown ends",
+    x = NULL,
+    y = "Proportion",
+    fill = "IMD decile"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
+
+
+```

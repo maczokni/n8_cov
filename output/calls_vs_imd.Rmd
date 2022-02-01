@@ -568,24 +568,147 @@ plot_imd_prepost("warrant/bail issue")
 
 ```{r}
 
+
+
 weekly_count_by_lsoa <- cheshire_calls %>% 
-   mutate(inc_wk = yearweek(incident_date_time)) %>%   
+   mutate(inc_wk = as_date(yearweek(incident_date_time))) %>%   
    group_by(lsoa, inc_wk) %>% count() %>% 
   left_join(lsoa_filler, .) %>%
     mutate(n = replace_na(n, 0)) %>% 
     left_join(., cheshire_imds, by = c("lsoa" = "LSOA11NM")) %>% 
-  filter(!is.na(index_of_multiple_deprivation_imd_decile)) %>%  # check why NAs
-  mutate(n = replace_na(n, 0)) %>% 
-  group_by(index_of_multiple_deprivation_imd_decile, inc_wk) %>% 
-  summarise(avg_weekly_call = mean(n, na.rm = T), 
-            n_per_lsoa = n/n())
-# 
-# ggplot(weekly_count_by_lsoa, aes(x = inc_wk, y = avg_weekly_call, colour = as.factor(index_of_multiple_deprivation_imd_decile))) +
-#   geom_point() + 
-#   geom_line()
+  filter(!is.na(index_of_multiple_deprivation_imd_decile)) # check why NAs
+
+firstweek <- min(weekly_count_by_lsoa$inc_wk)
+lastweek <- max(weekly_count_by_lsoa$inc_wk)
+
+
+weekly_count_by_lsoa <- weekly_count_by_lsoa %>% 
+  filter(inc_wk > firstweek & inc_wk < lastweek) 
+
+num_lsoa_per_decile <- weekly_count_by_lsoa %>% 
+  select(lsoa, index_of_multiple_deprivation_imd_decile) %>% 
+  distinct() %>% 
+  group_by(index_of_multiple_deprivation_imd_decile) %>% 
+  count() %>% 
+  rename(num_lsoas = n)
+
+thing <- weekly_count_by_lsoa %>% 
+  left_join(., num_lsoa_per_decile, by = c("index_of_multiple_deprivation_imd_decile" = "index_of_multiple_deprivation_imd_decile")) %>% 
+  select(inc_wk, n, index_of_multiple_deprivation_imd_decile, num_lsoas)  %>% 
+  group_by(inc_wk, index_of_multiple_deprivation_imd_decile, num_lsoas) %>%
+  summarise(n = sum(n)) %>%
+  mutate(calls_per_lsoa = n/num_lsoas) %>% 
+  group_by(inc_wk, index_of_multiple_deprivation_imd_decile) %>%
+  summarise(calls_per_lsoa = calls_per_lsoa) %>% 
+    mutate(percentage = calls_per_lsoa / sum(calls_per_lsoa))
+
+# Plot
+ggplot(thing, aes(x=inc_wk, y=percentage, fill=as.factor(index_of_multiple_deprivation_imd_decile))) + 
+    geom_area(alpha= 1 , size=0.001, colour="black") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual", palette = "Paired") + 
+  labs(
+    title = "Proportion of Calls from different IMD deciles",
+    x = NULL,
+    y = "Proportion",
+    fill = "IMD decile"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
+
+
+```
+
+
+zoom 
+
+```{r}
+
+
+
+# Plot
+ggplot(thing %>% filter(inc_wk > as.Date("2019-10-10")), 
+       aes(x=inc_wk, y=percentage, fill=as.factor(index_of_multiple_deprivation_imd_decile))) + 
+    geom_area(alpha= 1 , size=0.001, colour="black") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual", palette = "Paired") + 
+  labs(
+    title = "Proportion of Calls from different IMD deciles",
+    x = NULL,
+    y = "Proportion",
+    fill = "IMD decile"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
+
 
 ```
 
 
 
+## Breakdown by call type
 
+```{r}
+
+
+imd_area_plot <- function(inc_type) {
+  
+  type_calls <- cheshire_calls %>% filter(incident_type_new == inc_type) %>% 
+    group_by(lsoa) %>% count() %>% 
+    left_join(cheshire_imds, ., by = c("LSOA11NM" = "lsoa")) %>% 
+    mutate(n = replace_na(n, 0))
+  
+  labs_df <- type_calls %>% group_by(index_of_multiple_deprivation_imd_decile) %>% count()
+  
+ p <-  ggplot(type_calls %>% filter(!is.na(index_of_multiple_deprivation_imd_decile)), aes(x = as.factor(index_of_multiple_deprivation_imd_decile), y = n )) + 
+    geom_boxplot() + 
+    geom_label(data = labs_df, aes(x = index_of_multiple_deprivation_imd_decile, y = 50000, label = paste0("n = ",n))) + 
+    scale_y_log10() + 
+    labs(title = paste0(inc_type, " calls from LSOAs in each IMD decile 2015-2020")) + 
+    xlab("IMD decile (1 = most and 10 = least deprived)") + 
+    ylab(paste0("Number of ",inc_type," calls")) + 
+    theme_bw()
+ 
+ return(p)
+  
+}
+
+
+# Plot
+ggplot(thing %>% filter(inc_wk > as.Date("2019-10-10")), 
+       aes(x=inc_wk, y=percentage, fill=as.factor(index_of_multiple_deprivation_imd_decile))) + 
+    geom_area(alpha= 1 , size=0.001, colour="black") +
+  # First UK case
+  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
+  # First UK lockdown begins
+  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
+  # First UK lockdown ends
+  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_brewer(type = "qual", palette = "Paired") + 
+  labs(
+    title = "Proportion of Calls from different IMD deciles",
+    x = NULL,
+    y = "Proportion",
+    fill = "IMD decile"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
+
+
+```
