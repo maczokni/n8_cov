@@ -71,7 +71,76 @@ calls <- mutate(
 )
 
 cheshire_calls <- calls %>% filter(lsoa %in% unique(cheshire_lsoas$LSOA11NM))
+weekly_count_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_count_by_lsoa.csv")
+weekly_asb_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_asb_by_lsoa.csv")
+weekly_misper_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_misper_by_lsoa.csv")
+weekly_violence_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_violence_by_lsoa.csv")
+weekly_dv_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_dv_by_lsoa.csv")
 
+call_forecasts <- read_rds("/Volumes/n8_covid/dep_level_forecasts.Rds")
+
+# Note important dates
+# Source: https://www.instituteforgovernment.org.uk/sites/default/files/timeline-lockdown-web.pdf
+dates <- tribble(
+  ~date, ~event,
+  "2020-01-31", "first UK COVID case",
+  "2020-03-23", "first lockdown begins",
+  "2020-06-15", "first lockdown ends",
+  "2020-11-05", "second lockdown begins",
+  "2020-12-02", "second lockdown ends"
+) %>% 
+  mutate(
+    date = as_date(yearweek(ymd(date))), 
+    row = row_number(),
+    label = str_glue("{row}. {event}")
+  )
+
+
+forecast_chart <- function (forecasts, types) {
+  
+  forecasts %>% 
+    filter(dep_level %in% types) %>% 
+    # Occasionally the ARIMA model may produce forecast confidence intervals
+    # that are less than zero, which will not show up on the plot because we
+    # have set the y axis to start at zero (to make changes in vertical position
+    # on the axis representative of changes in magnitude). To deal with this we
+    # will manually set the lower CI of the forecasts to be zero if it is less
+    # than zero in the original forecast.
+    mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
+    ggplot() +
+    # Forecast
+    geom_ribbon(
+      aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+      na.rm = TRUE,
+      alpha = 0.5, 
+      fill = "grey80"
+    ) +
+    geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+    # Actual calls
+    geom_line(aes(incident_week, actual_calls)) +
+    geom_point(aes(incident_week, actual_calls, fill = sig), shape = 21) +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+                 limits = as.Date(c("2020-01-06", "2020-12-21"))) +
+    scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+    scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+    labs(
+      title = "Calls for service during 2021 compared to pre-pandemic forecast",
+      subtitle = str_wrap(
+        str_glue("Events by week: ", str_c(pull(dates, label), collapse = "; ")), 
+        80
+      ),
+      caption = "Forecast calculated using data up to 31 January 2020",
+      x = NULL,
+      y = "weekly count of calls for service",
+      fill = "actual calls significantly different from forecast"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+  
+}
            
 ```
 
@@ -188,18 +257,10 @@ We can see that over time a steady pattern whereby larger proportion of the call
 
 
 ```{r}
-
-
-
-weekly_count_by_lsoa <- cheshire_calls %>% 
-   mutate(inc_wk = as_date(yearweek(incident_date_time))) %>%   
-   group_by(lsoa, inc_wk) %>% count() %>% 
-  left_join(lsoa_filler, .) %>%
-    mutate(n = replace_na(n, 0)) %>% 
-    left_join(., cheshire_lsoas %>% st_drop_geometry(), by = c("lsoa" = "LSOA11NM")) %>% 
-  filter(!is.na(index_of_multiple_deprivation_imd_decile)) # check why NAs
-
-firstweek <- min(weekly_count_by_lsoa$inc_wk)
+plot_imds <- function(weekly_count_by_lsoa) {
+  
+  
+  firstweek <- min(weekly_count_by_lsoa$inc_wk)
 lastweek <- max(weekly_count_by_lsoa$inc_wk)
 
 
@@ -247,42 +308,87 @@ ggplot(thing, aes(x=inc_wk, y=percentage, fill=as.factor(index_of_multiple_depri
   ) +
   theme_minimal() +
   theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
+  
+}
 
 
+plot_imds(weekly_count_by_lsoa)
 ```
 
 
-We can zoom into the time period immediately preceding and following the lockdown period, however we see no real shift in where the calls were coming from in terms of the levels of deprivation in these areas. 
+
+
+## Check for some different call types
+
+
+### ASB
 
 ```{r}
 
-
-
-# Plot
-ggplot(thing %>% filter(inc_wk > as.Date("2019-10-10")), 
-       aes(x=inc_wk, y=percentage, fill=as.factor(index_of_multiple_deprivation_imd_decile))) + 
-    geom_area(alpha= 1 , size=0.001, colour="black") +
-  # First UK case
-  geom_vline(xintercept = as.Date("2020-01-23"), linetype = "33") +
-  # First UK lockdown begins
-  geom_vline(xintercept = as.Date("2020-03-23"), linetype = "12") +
-  # First UK lockdown ends
-  geom_vline(xintercept = as.Date("2020-06-01"), linetype = "42") +
-  geom_label(aes(as.Date("2020-01-23"), 0, label = "1"), fill = "white", colour = "grey20", nudge_y = -0.05) +
-  geom_label(aes(as.Date("2020-03-23"), 0, label = "2"), fill = "white", colour = "grey20", nudge_y = -0.05) +
-  geom_label(aes(as.Date("2020-06-01"), 0, label = "3"), fill = "white", colour = "grey20", nudge_y = -0.05) +
-  scale_x_date(date_breaks = "6 months", date_labels = "%b\n%Y", expand = c(0, 0)) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  scale_fill_brewer(type = "qual", palette = "RdYlBu") + 
-  labs(
-    title = "Proportion of Calls from different IMD deciles",
-    subtitle = "1: First UK Case, 2: Lockdown begins, 3: Lockdown ends",
-    x = NULL,
-    y = "Proportion",
-    fill = "IMD decile"
-  ) +
-  theme_minimal() +
-  theme(legend.position = "bottom") +    guides(fill=guide_legend(nrow=1,byrow=TRUE))
+plot_imds(weekly_asb_by_lsoa)
 
 
 ```
+
+### Missing Perons
+
+```{r}
+
+plot_imds(weekly_misper_by_lsoa)
+
+
+```
+
+### Violence/Harassment
+
+```{r}
+
+plot_imds(weekly_violence_by_lsoa)
+
+
+```
+
+### Domestic Incidents
+
+```{r}
+
+plot_imds(weekly_dv_by_lsoa)
+
+
+```
+
+
+
+## Forecasts
+
+We see a change for ASB so it might be worth doing a forecast. The number of weekly observations is too low/ noisy if we look at deciles, but can use the IMD rank to break LSOAs into three equal groups: low, medium, and high deprivation. 
+
+
+```{r}
+
+forecast_chart(call_forecasts, "high")
+
+
+```
+
+
+```{r}
+
+forecast_chart(call_forecasts, "medium")
+
+
+```
+
+
+```{r}
+
+forecast_chart(call_forecasts, "low")
+
+
+```
+
+
+
+
+
+
