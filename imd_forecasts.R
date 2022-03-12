@@ -31,11 +31,15 @@ calls <- left_join(cheshire_calls, cheshire_lsoas, by = c("lsoa" = "LSOA11NM"))
 # cheshire_lsoas %>% st_drop_geometry() %>% group_by(dep_level, index_of_multiple_deprivation_imd_decile) %>% count()
 
 
-# Count weekly calls, add dummy variables and convert to a tsibble object
+# Count weekly calls, calculate percent each week from high/med/low, 
+#  add dummy variables and convert to a tsibble object
 count_all_calls <- calls %>% 
   filter(incident_type_new == "ASB") %>% 
   mutate(incident_week = yearweek(incident_date_time)) %>% 
   count(dep_level, incident_week, name = "call_count") %>%   
+  group_by(incident_week) %>% 
+  mutate(per =  call_count/sum(call_count)*100) %>% 
+  ungroup %>% 
   # Remove the first and last weeks from the data because weeks are defined as
   # being seven days starting on a Monday so weeks are sometimes split across
   # years. This means that at the start and end of the data there might be (and
@@ -43,7 +47,7 @@ count_all_calls <- calls %>%
   # 'weekly' call counts are artificially low.
   slice(2:(n() - 1)) %>% 
   as_tsibble(index = incident_week, key = dep_level) %>% 
-  fill_gaps(call_count = 0) %>% 
+  fill_gaps(per = 0) %>% 
   # Add dummy variables
   mutate(
     # Dummy for change from old to new call-handling system
@@ -61,7 +65,7 @@ model_all_calls <- count_all_calls %>%
   # If you only want to model certain types of call, add a `filter()` here
   filter(incident_week < yearweek(ymd("2020-01-31"))) %>% 
   model(
-    arima = ARIMA(call_count ~ trend() + season() + new_system + hmic_changes + bank_holiday)
+    arima = ARIMA(per ~ trend() + season() + new_system + hmic_changes + bank_holiday)
   )
 
 # Create data for forecasting
@@ -100,7 +104,7 @@ final_all_calls_2 <- count_all_calls %>%
     dep_level %in% unique(model_all_calls$dep_level),
     incident_week > yearweek(ymd("2019-12-31"))
   ) %>% 
-  select(incident_week, actual_calls = call_count) %>% 
+  select(incident_week, actual_calls = per) %>% 
   full_join(
     forecast_all_calls, 
     by = c("dep_level", "incident_week")
@@ -124,7 +128,7 @@ final_all_calls_2 <- count_all_calls %>%
   replace_na(list(sig = FALSE))
 
 # Save result for use elsewhere (e.g. in an Rmarkdown document)
-write_rds(final_all_calls_2, here::here("output/dep_level_forecasts.Rds"))
+write_rds(final_all_calls_2, here::here("output/dep_level_asb_forecasts.Rds"))
 
 
 

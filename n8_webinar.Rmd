@@ -49,6 +49,7 @@ total_calls_by_imd <- read_csv("/Volumes/n8_covid/total_calls_by_imd.csv")
 weekly_count_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_count_by_lsoa.csv")
 weekly_asb_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_asb_by_lsoa.csv")
 
+
 # Note important dates
 # Source: https://www.instituteforgovernment.org.uk/sites/default/files/timeline-lockdown-web.pdf
 dates <- tribble(
@@ -141,17 +142,54 @@ forecast_chart <- function (forecasts, variable, value) {
 ---
 class: center, middle
 
-# Overview
+# The problem
 
-## 3 themes
+> Binary comparisons of one period to another are common, but can be seriously misleading.
 
-- Call types
-- Police response
-- Origin of calls
+---
+.center[![COVID19 and crime article](imgs/cov_news_01.png)]
+
+---
+class: center, middle
+.center[![COVID19 and crime article](imgs/cov_news_03.png)]
+
+---
+.center[![COVID19 and crime article](imgs/cov_news_02.png)]
+---
+
+.center[![COVID19 and crime article](imgs/cov_news_04.png)]
 
 ---
 
-# Calls
+# Can miss the big picture
+.center[![miss picture](imgs/miss_whole_picture.png)]
+
+---
+# Important to zoom out
+.center[![miss picture 2](imgs/miss_pic_2.png)]
+
+
+---
+# Need to account for trends
+.center[![trends](imgs/ignore_trends.png)]
+
+---
+
+# Need to account for noise
+.center[![noise](imgs/ignore_noise.png)]
+
+---
+class: middle
+# Forecasting: a better method
+
+.pull-left[Create a synthetic comparison group by using previous crime data to build a model that forecast how much crime would have occurred in the absence of the pandemic.]
+.pull-right[![forecasting](imgs/forecasting_book.png)]
+
+
+
+---
+
+# Forecasting Calls for Service
 
 ```{r totalcallsfig, fig.width=11,fig.height=7}
 
@@ -197,12 +235,13 @@ all_calls %>%
 ```
 
 ---
+class: center, middle
 
-Add call volume by grade? 
+# Results
 
 ---
 
-# Call types: Quiet roads
+# Quiet roads
 
 ```{r quietroadsplots, fig.width=11,fig.height=8}
 
@@ -232,7 +271,7 @@ gridExtra::grid.arrange(p1, p2, p3, ncol = 1)
 
 ---
 
-# Call types: Expressions of concern
+# Expressions of concern
 
 
 ```{r asbplot, fig.width=11,fig.height=8}
@@ -251,11 +290,47 @@ gridExtra::grid.arrange(p1, p2, ncol = 1)
 
 ```
 
+---
+# Expressions of concern
+
+> "ASB calls [are] about COVID breaches being coded as ASB... lots of people were reporting other people for breaching the rules. There were a lot of calls where people were very frustrated and they were complaining about their neighbours and the sort of call that sticks in my mind, which I found quite moving quite upsetting really was when somebody would ring in and say that they weren't able to go and visit their elderly relative who lived maybe a mile away... and their next door neighbour was having a party and all these people were turning up." (interview 1)
+
+--
+
+> "... at the start of it, nobody really knew how it was going to affect them. I think there were a lot of people were quite genuinely scared that they were gonna maybe die from it." (interview 3)
+
+--
+
+
+> "We do get quite a lot of calls, sometimes about oh, you know the the neighbors are smoking drugs in the back garden, you know, sort of weed, that kind of thing." (interview 8)
+
+---
+
+## Advice/Directions/Admin
+
+```{r Admin, fig.width=11,fig.height=8}
+
+forecast_chart(call_forecasts, "incident_type_new", "Advice/Directions/Admin")
+```
+
+---
+
+# Calls for information/ reassurance
+
+> "...in the first part of the first lockdown, people were very confused and very worried about breaking the law and very worried about being arrested for and they would ring up and say, can I do this and can I do that so people were actually asking our advice ..." (interview 1)
+
+--
+
+> "...there are also people calling in because they wanted advice about regulations or were uncertain about what they were allowed to do things..." (interview 3)
+
+--
+
+> "I'd say there's definitely an increase in mental health related incidents that we're seeing and I think people are just really struggling with the isolation of being away from everyone... Sometimes people don't know [who to call] to speak to someone for support so they just ring the police. " (interview 4)
 
 
 ---
 
-# Call types: Presence of guardians/ absence of targets
+# Presence of guardians/ absence of targets
 
 
 ```{r guardiansplot1, fig.width=11,fig.height=8}
@@ -266,7 +341,7 @@ forecast_chart(call_forecasts, "incident_type_new", "Burglary - Residential")
 
 ---
 
-# Call types: Presence of guardians/ absence of targets
+# Presence of guardians/ absence of targets
 
 
 ```{r guardiansplot2, fig.width=11,fig.height=7}
@@ -286,7 +361,7 @@ gridExtra::grid.arrange(p1, p2,p3, ncol = 1)
 
 ---
 
-# Call types: Presence of guardians/ absence of targets
+# Presence of guardians/ absence of targets
 
 
 ```{r guardiansplot3, fig.width=11,fig.height=7}
@@ -300,6 +375,31 @@ p2 <- forecast_chart(call_forecasts, "incident_type_new", "Robbery")
 gridExtra::grid.arrange(p1, p2, ncol = 1)
 
 ```
+
+---
+
+# Violence and harassment
+
+```{r Violence/Harassment, fig.width=11,fig.height=7}
+forecast_chart(call_forecasts, "incident_type_new", "Violence/Harassment")
+```
+
+---
+
+# Night time economy
+
+> "Kickoffs, if if I can say that Saturday nights drunken night, yeah, those sort of thing, those sort of calls were a massive decrease." (interview 5)
+
+--
+
+> "A lot of the violence incidents that we deal with, especially the likes of Friday night, Saturday night, weekends people have been out drinking and the clubs and pubs and starting fights wasn't happening because the pubs weren't open." (interview 8)
+
+---
+
+# Online harassment
+
+> "There's definitely more online crime. So obviously people are not able to go out and interact in person, but they can over social media and other avenues, such as phone calls, texts - these definitely seem more... I'd say they changed in the sense that the threats were still being made, but not in person, so they will be made over a text or a phone call, social media..." (interview 4)
+
 
 
 ---
@@ -342,14 +442,39 @@ gridExtra::grid.arrange(p1, p2,p3, p4, ncol = 2)
 ```
 
 ---
+class: center, middle
+# Domestic incidents: no increase
 
-# Call types: Domestic incidents
+> "We were expecting an increase in domestic violence and domestic violence is a big issue for any force. And I'm not sure that in the early days we saw an increase. Certainly I didn't notice a dramatic increase or anything like that. (interview 3)
+ 
+--
 
-Include here some comments from interviews about
+> "I don't really remember them being any higher in the lock downs than normal, and there were a lot of people were saying that all domestics have gone up, but I'm just guessing that people were spending so much time with each other forced that they're gonna have arguments. " (interview 6)
+ 
+--
 
-> No evidence of "can't talk partner present"
+> "I did expect more domestics and things because people were in their addresses, but it didn't. From my personal experience didn't seem to happen." (interview 7)
 
-> Shift in topic (more parent vs child)
+--
+
+> "... when we get the calls it's like ... when they've been out on the town up to the pubs having drinks and then they come back and they disagree over something so little. And that's when the domestic start." (interview 5)
+
+---
+class: center, middle
+# Domestic incidents: couldn't call?
+
+> "I remember a lady who was desperately upset. She was very, very distressed and this must have been as lockdown was easing a bit because her husband had actually gone out and this was the first opportunity she'd had to make the call... that Lady had more than likely gone through all sorts before she could actually found the opportunity to ring it in." (interview 1)
+
+---
+class: center, middle
+# Domestic incidents: change in type
+
+> "I'd say there's quite a lot of child related incidents to deal with domestic ... You know this parents kept this child too long." (interview 4)
+
+--
+
+> "The other thing as well that we found uhm with the kids as well. People keeping their teenagers inside the house. You know, quite a lot of the kids were getting a bit rebellious and they wanted to go out with their mates and (...) they were having arguments with mum and dad about the fact they couldn't leave the house. There was a a few more of those and you know, sort of." (interview 8)
+
 
 ---
 
@@ -609,10 +734,15 @@ plot_imds(weekly_count_by_lsoa)
 
 # Origin of calls: IMD for ASB calls
 
-```{r}
+```{r asbimdchange, fig.width=11,fig.height=7}
 
 plot_imds(weekly_asb_by_lsoa)
 
 ```
+
+
+
+
+
 
 

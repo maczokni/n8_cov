@@ -3,7 +3,7 @@ library(tsibble)
 library(lubridate)
 library(sf)
 
-cheshire_calls <- read_csv("/Volumes/n8_covid/cheshire_calls.csv.csv")
+cheshire_calls <- read_csv("/Volumes/n8_covid/cheshire_calls.csv")
 cheshire_lsoas <- st_read("cheshire_lsoas.geojson")
 
 week_filler <- data.frame(daysforfiller = seq(min(cheshire_calls$incident_date_time), 
@@ -49,6 +49,17 @@ weekly_asb_by_lsoa <- cheshire_calls %>%
 
 
 write.csv(weekly_asb_by_lsoa, "/Volumes/n8_covid/weekly_asb_by_lsoa.csv")
+
+weekly_drugs_by_lsoa <- cheshire_calls %>% 
+  filter(incident_type_new == "Drugs") %>% 
+  mutate(inc_wk = as_date(yearweek(incident_date_time))) %>%   
+  group_by(lsoa, inc_wk) %>% count() %>% 
+  left_join(week_and_lsoa_filler, .) %>%
+  mutate(n = replace_na(n, 0)) %>% 
+  left_join(., cheshire_lsoas %>% st_drop_geometry(), by = c("lsoa" = "LSOA11NM"))
+
+
+write.csv(weekly_drugs_by_lsoa, "/Volumes/n8_covid/weekly_drugs_by_lsoa.csv")
 
 weekly_misper_by_lsoa <- cheshire_calls %>% 
   filter(incident_type_new == "Missing Person") %>% 
