@@ -27,6 +27,7 @@ library(lubridate)
 library(tidyverse)
 library(tsibble)
 library(sf)
+library(ineq)
 
 all_calls <- read_rds("/Volumes/n8_covid/all_calls_forecast.Rds")
 call_forecasts <- read_rds("/Volumes/n8_covid/call_forecasts.Rds")
@@ -48,6 +49,8 @@ lsoa_filler <- bind_rows(data.frame(lsoa = unique(cheshire_lsoas$LSOA11NM),
 total_calls_by_imd <- read_csv("/Volumes/n8_covid/total_calls_by_imd.csv")
 weekly_count_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_count_by_lsoa.csv")
 weekly_asb_by_lsoa <- read_csv("/Volumes/n8_covid/weekly_asb_by_lsoa.csv")
+# gini_asb <- read_rds("/Volumes/n8_covid/gini_asb_forecast.Rds")
+
 
 
 # Note important dates
@@ -235,9 +238,14 @@ all_calls %>%
 ```
 
 ---
-class: center, middle
+class: center, middle, inverse
 
 # Results
+
+---
+class: center, middle, inverse
+
+# Changes in call types
 
 ---
 
@@ -404,7 +412,7 @@ forecast_chart(call_forecasts, "incident_type_new", "Violence/Harassment")
 
 ---
 
-# Call types: Domestic incidents
+# Domestic incidents
 
 ```{r domesticfig, fig.width=11,fig.height=7}
 
@@ -417,7 +425,7 @@ forecast_chart(call_forecasts, "incident_type_new", "Domestic Incident")
 
 ---
 
-# Call types: Domestic incidents
+# Domestic incidents
 This does not change when we break down by grade of call.
 
 ```{r domesticbygradefig, fig.width=11,fig.height=7}
@@ -475,10 +483,13 @@ class: center, middle
 
 > "The other thing as well that we found uhm with the kids as well. People keeping their teenagers inside the house. You know, quite a lot of the kids were getting a bit rebellious and they wanted to go out with their mates and (...) they were having arguments with mum and dad about the fact they couldn't leave the house. There was a a few more of those and you know, sort of." (interview 8)
 
+---
+class: center, middle, inverse
+# Police response
 
 ---
-
-# Police response: Attendance rate
+class: center, middle
+# Attendance rate
 
 
 ```{r allattendedfig, fig.width=11,fig.height=7}
@@ -524,8 +535,8 @@ all_calls_attended_forecast %>%
 ```
 
 ---
-
-# Police response: Attendance rate
+class: center, middle
+# Attendance rate
 
 ```{r bygradeattendedperc, fig.width=11,fig.height=7}
 
@@ -548,8 +559,8 @@ gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
 ```
 
 ---
-
-# Police response: Response time
+class: center, middle
+# Response time
 
 ```{r allresptimefig, fig.width=11,fig.height=8}
 
@@ -586,8 +597,8 @@ all_rt_forecast %>%
 ```
 
 ---
-
-# Police response: Response time
+class: center, middle
+# Response time
 
 ```{r bygraderesptime, fig.width=11,fig.height=7}
 
@@ -609,15 +620,10 @@ gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
 
 ```
 
----
-
-# Police response: Time on scene
-
-Need alltogether time on scene graph here
 
 ---
-
-# Police response: Time on scene
+class: center, middle
+# Time on scene
 
 ```{r bygradetos, fig.width=11,fig.height=7}
 
@@ -640,8 +646,13 @@ gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
 ```
 
 ---
+class: center, middle, inverse
+# Change in nature of the demand
 
-# Origin of calls: IMD
+---
+
+
+# Index of Multiple Deprivation
 
 ```{r totalimd, fig.width=11,fig.height=7}
 
@@ -664,7 +675,7 @@ ggplot(total_calls_by_imd , aes(x = as.factor(index_of_multiple_deprivation_imd_
 
 ---
 
-# Origin of calls: IMD 
+# No change for overall calls 
 
 ```{r imdchange, fig.width=11,fig.height=7}
 
@@ -732,7 +743,7 @@ plot_imds(weekly_count_by_lsoa)
 
 ---
 
-# Origin of calls: IMD for ASB calls
+# Increase of calls recorded as ASB (concern over COVID-19 breach) from less deprived areas
 
 ```{r asbimdchange, fig.width=11,fig.height=7}
 
@@ -741,8 +752,41 @@ plot_imds(weekly_asb_by_lsoa)
 ```
 
 
+--- 
+
+# Less concentration of calls
 
 
+```{r giniASB, fig.width=11,fig.height=7}
 
+make_gini_plot <- function(x){
+  
+  weekly_gini <- x %>% 
+    group_by(inc_wk) %>% 
+    summarise(gini = ineq(n), type = "Gini")
+  
+  ggplot(weekly_gini, aes(x = inc_wk, y = gini)) + 
+    geom_line() + 
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0.35, label = row), data = dates, colour = "grey20") +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+                 limits = as.Date(c("2015-01-01", "2020-12-21")))+
+    labs(
+      title = "Gini coefficient* over time",
+      subtitle = "*measure of inequality with 0 = perfect equality and 1 = maximal inequality",
+      x = NULL,
+      y = "Gini coefficient") +
+    theme_minimal() +
+    theme(plot.title = element_text(face = "bold"))
+}
 
+make_gini_plot(weekly_asb_by_lsoa)
 
+```
+
+---
+
+# Overall 
+
+ 

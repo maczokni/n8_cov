@@ -95,5 +95,14 @@ weekly_violence_by_lsoa <- cheshire_calls %>%
 write.csv(weekly_violence_by_lsoa, "/Volumes/n8_covid/weekly_violence_by_lsoa.csv")
 
 
+weekly_admin_by_lsoa <- cheshire_calls %>% 
+  filter(incident_type_new == "Advice/Directions/Admin") %>% 
+  mutate(inc_wk = as_date(yearweek(incident_date_time))) %>%   
+  group_by(lsoa, inc_wk) %>% count() %>% 
+  left_join(week_and_lsoa_filler, .) %>%
+  mutate(n = replace_na(n, 0)) %>% 
+  left_join(., cheshire_lsoas %>% st_drop_geometry(), by = c("lsoa" = "LSOA11NM"))
 
+
+write.csv(weekly_admin_by_lsoa, "/Volumes/n8_covid/weekly_admin_by_lsoa.csv")
 

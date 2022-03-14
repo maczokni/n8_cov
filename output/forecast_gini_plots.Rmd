@@ -1,0 +1,141 @@
+---
+title: "Gini Coefficient forecast and observed"
+author: "RS MA NK EK"
+date: "14/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, echo = FALSE, include = TRUE)
+
+library(lubridate)
+library(tidyverse)
+library(tsibble)
+```
+
+```{r load data, include=FALSE}
+
+
+gini_all_types <- read_rds("/Volumes/n8_covid/gini_forecasts.Rds")
+gini_asb <- read_rds("/Volumes/n8_covid/gini_asb_forecast.Rds")
+gini_drugs <- read_rds("/Volumes/n8_covid/gini_drugs_forecast.Rds")
+gini_dv <- read_rds("/Volumes/n8_covid/gini_dv_forecast.Rds")
+gini_violence <- read_rds("/Volumes/n8_covid/gini_violence_forecast.Rds")
+gini_misper <- read_rds("/Volumes/n8_covid/gini_misper_forecast.Rds")
+
+# Note important dates
+# Source: https://www.instituteforgovernment.org.uk/sites/default/files/timeline-lockdown-web.pdf
+dates <- tribble(
+  ~date, ~event,
+  "2020-01-31", "first UK COVID case",
+  "2020-03-23", "first lockdown begins",
+  "2020-06-15", "first lockdown ends",
+  "2020-11-05", "second lockdown begins",
+  "2020-12-02", "second lockdown ends"
+) %>% 
+  mutate(
+    date = as_date(yearweek(ymd(date))), 
+    row = row_number(),
+    label = str_glue("{row}. {event}")
+  )
+
+
+make_gini_plot <- function(x){
+  
+  x %>% 
+    mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
+    ggplot() +
+    # Forecast
+    geom_ribbon(
+      aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+      na.rm = TRUE,
+      alpha = 0.5, 
+      fill = "grey80"
+    ) +
+    geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+    # Actual calls
+    geom_line(aes(incident_week, actual_gini)) +
+    geom_point(aes(incident_week, actual_gini, fill = sig), shape = 21) +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+                 limits = as.Date(c("2020-01-06", "2020-12-21"))) +
+    scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+    scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+    labs(title = "Gini coefficient* over time",
+    subtitle = "*measure of inequality with 0 = perfect equality and 1 = maximal inequality",
+      caption = str_wrap(
+        str_glue("Events by week: ", str_c(pull(dates, label), collapse = "; ")), 
+        80
+      ),
+      x = NULL,
+      y = "Gini coefficient",
+      fill = "Observed Gini index significantly different from forecast"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+  
+}
+
+
+
+```
+
+
+
+## Gini for all calls
+
+```{r giniforalltypes}
+
+make_gini_plot(gini_all_types)
+
+```
+
+
+## Gini forecast for ASB
+
+```{r giniASB}
+
+make_gini_plot(gini_asb )
+
+```
+
+
+
+## Gini forecast for drugs
+
+```{r ginidrugs}
+
+make_gini_plot(gini_drugs )
+
+```
+
+
+
+## Gini forecast for violence
+
+```{r giniviolence}
+
+make_gini_plot(gini_violence )
+
+```
+
+
+
+## Gini forecast for domestic incidents
+
+```{r ginidv}
+
+make_gini_plot(gini_dv)
+
+```
+
+
+## Gini forecast for missing persons
+
+```{r ginimisper}
+
+make_gini_plot(gini_misper)
+
+```
