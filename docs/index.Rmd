@@ -786,7 +786,39 @@ make_gini_plot(weekly_asb_by_lsoa)
 ```
 
 ---
+class: center, middle, inverse
+# Conclusions
 
-# Overall 
+---
+# Call types
 
- 
+- Quiet roads
+- Expressions of concern
+- Calls for advice
+- Presence of guardians and absence of targets
+- Violence drop
+- No change in domestic violence
+
+
+---
+# Police response
+
+- Higher % attended (denominator?)
+- Faster response time
+- Less time on scene
+
+
+---
+# Change in nature of demand
+
+- For ASB the caller "profile" changed
+- Otherwise no change
+
+
+---
+# Recommendations
+
+- Further spatiotemporal analysis
+- Share good practice (e.g. FHQ information to clarify rules and regulations)
+- Further and more robust look at changes to domestic incidents
+- Consider efficiencies (reduced time on scene)
