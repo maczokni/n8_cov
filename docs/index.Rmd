@@ -335,6 +335,17 @@ forecast_chart(call_forecasts, "incident_type_new", "Advice/Directions/Admin")
 
 > "I'd say there's definitely an increase in mental health related incidents that we're seeing and I think people are just really struggling with the isolation of being away from everyone... Sometimes people don't know [who to call] to speak to someone for support so they just ring the police. " (interview 4)
 
+---
+
+# Support for such calls
+
+
+> "We were directing people to the government website... We were we're not really qualified to advise people on the regulations that actually fit their particular area, because there was an area to area thing at certain times during the lockdown where different local councils and had different idea about the rules, interpreted the rules differently..." (interview 1)
+
+> "Getting quite a few calls from elderly people asking for advice ...  advice on guidelines...  Of course we referred them to the government website because they're better off going something like that's got advice in relation to [COVID regulations] (interview 4) 
+
+> "We have an FAQ. That specially for FCC stuff. And most of the answers can be found in there... There was plenty of support here at work. ...we had a very large VDU display on the wall with the latest rules and regulations like a like a PowerPoint running through on a continual on a continual rotation." (interview 1) 
+
 
 ---
 
@@ -752,12 +763,11 @@ plot_imds(weekly_asb_by_lsoa)
 ```
 
 
---- 
 
-# Less concentration of calls
+---
+## Less concentration of ASB calls
 
-
-```{r giniASB, fig.width=11,fig.height=7}
+```{r giniASB2, fig.width=11,fig.height=7}
 
 make_gini_plot <- function(x){
   
