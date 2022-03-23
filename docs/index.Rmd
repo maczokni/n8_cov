@@ -11,7 +11,6 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-
 ---
 class: center, middle
 
@@ -29,6 +28,9 @@ library(tsibble)
 library(sf)
 library(ineq)
 
+```
+
+```{r load-data, include=FALSE}
 all_calls <- read_rds("/Volumes/n8_covid/all_calls_forecast.Rds")
 call_forecasts <- read_rds("/Volumes/n8_covid/call_forecasts.Rds")
 all_rt_forecast <- read_rds("/Volumes/n8_covid/all_resp_time_forecast.Rds")
@@ -147,7 +149,7 @@ class: center, middle
 
 # The problem
 
-> Binary comparisons of one period to another are common, but can be seriously misleading.
+Binary comparisons of one period to another are common, but can be seriously misleading.
 
 ---
 
@@ -164,17 +166,207 @@ class: center, middle
 
 ---
 
+# It's easy to miss the big picture
 
+```{r atlanta-map-prep, include=FALSE}
+tidy_data <- read_csv("imgs/tracking-crime-changes-data.rds") %>% 
+  filter(offense_type == "HOMICIDE") %>% 
+  mutate(year = year(offense_date)) %>% 
+  count(year, wt = n) %>% 
+  filter(year %in% 2016:2017) %>% 
+  mutate(
+    change = (n - lag(n)) / lag(n),
+    hjust = ifelse(year == 2016, 1, 0),
+    label = ifelse(
+      hjust == 0, 
+      str_glue("{n} homicides\n({scales::percent(change)})"), 
+      str_glue("{n} homicides")
+    )
+  )
 
-# Can miss the big picture
-.center[![miss picture](imgs/miss_whole_picture.png)]
+example_homicides <- read_rds("imgs/atlanta_example_homicides.Rds")
+```
+
+```{r atlanta-map-1, fig.asp=0.56, fig.retina=4, out.width="100%"}
+# Create an empty map with necessary scales, theme, etc. (geoms will be added
+# later)
+atlanta_map <- ggplot(tidy_data, aes(year, n)) +
+  scale_x_continuous(
+    breaks = 2016:2017, 
+    limits = c(2010, 2018),
+    labels = scales::number_format(accuracy = 1, big.mark = ""),
+    expand = expansion(mult = c(0.025, 0.1))
+  ) +
+  scale_y_continuous(
+    limits = c(0, 150), 
+    expand = expansion(mult = c(0, 0.03))
+  ) +
+  labs(
+    x = NULL,
+    y = "annual count of homicides",
+    caption = "Data: Atlanta Police Department"
+  ) +
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank())
+
+atlanta_map +
+  geom_line(na.rm = TRUE, colour = "#EA7600", size = 1) +
+  geom_point(na.rm = TRUE, colour = "#EA7600") +
+  geom_label(
+    aes(hjust = hjust, label = label), 
+    fill = NA, 
+    label.padding = unit(0.5, "lines"), 
+    label.size = NA,
+    lineheight = 1.05
+  )
+```
 
 ---
-# Important to zoom out
-.center[![miss picture 2](imgs/miss_pic_2.png)]
 
+# It's easy to miss the big picture
+
+```{r atlanta-map-2, fig.asp=0.56, fig.retina=4, out.width="100%"}
+trend_type <- "part of a downward trend"
+
+atlanta_map +
+	geom_line(
+	  data = filter(example_homicides, scenario == trend_type), 
+	  na.rm = TRUE,
+	  colour = "grey80", 
+	  size = 1
+	) +
+	geom_point(
+	  data = filter(example_homicides, scenario == trend_type), 
+	  na.rm = TRUE,
+	  colour = "grey80"
+	) +
+  geom_line(na.rm = TRUE, colour = "#EA7600", size = 1) +
+  geom_point(na.rm = TRUE, colour = "#EA7600") +
+  annotate(
+    "label", 
+    label = trend_type,
+    x = 2010.5, 
+    y = 10, 
+    fill = "orange", 
+    fontface = "bold",
+    hjust = 0, 
+    label.size = NA, 
+    label.padding = unit(0.5, "lines"), 
+    size = 5,
+    vjust = 0
+  )
+```
 
 ---
+
+# It's easy to miss the big picture
+
+```{r atlanta-map-3, fig.asp=0.56, fig.retina=4, out.width="100%"}
+trend_type <- "a one-year blip with no trend"
+
+atlanta_map +
+	geom_line(
+	  data = filter(example_homicides, scenario == trend_type), 
+	  na.rm = TRUE,
+	  colour = "grey80", 
+	  size = 1
+	) +
+	geom_point(
+	  data = filter(example_homicides, scenario == trend_type), 
+	  na.rm = TRUE,
+	  colour = "grey80"
+	) +
+  geom_line(na.rm = TRUE, colour = "#EA7600", size = 1) +
+  geom_point(na.rm = TRUE, colour = "#EA7600") +
+  annotate(
+    "label", 
+    label = trend_type,
+    x = 2010.5, 
+    y = 10, 
+    fill = "orange", 
+    fontface = "bold",
+    hjust = 0, 
+    label.size = NA, 
+    label.padding = unit(0.5, "lines"), 
+    size = 5,
+    vjust = 0
+  )
+```
+
+---
+
+# It's easy to miss the big picture
+
+```{r atlanta-map-4, fig.asp=0.56, fig.retina=4, out.width="100%"}
+trend_type <- "a one-year blip in an upward trend"
+
+atlanta_map +
+	geom_line(
+	  data = filter(example_homicides, scenario == trend_type), 
+	  na.rm = TRUE,
+	  colour = "grey80", 
+	  size = 1
+	) +
+	geom_point(
+	  data = filter(example_homicides, scenario == trend_type), 
+	  na.rm = TRUE,
+	  colour = "grey80"
+	) +
+  geom_line(na.rm = TRUE, colour = "#EA7600", size = 1) +
+  geom_point(na.rm = TRUE, colour = "#EA7600") +
+  annotate(
+    "label", 
+    label = trend_type,
+    x = 2010.5, 
+    y = 10, 
+    fill = "orange", 
+    fontface = "bold",
+    hjust = 0, 
+    label.size = NA, 
+    label.padding = unit(0.5, "lines"), 
+    size = 5,
+    vjust = 0
+  )
+```
+
+---
+
+# It's easy to miss the big picture
+
+```{r atlanta-map-5, fig.asp=0.56, fig.retina=4, out.width="100%"}
+trend_type <- "random variation with no trend"
+
+atlanta_map +
+	geom_line(
+	  data = filter(example_homicides, scenario == trend_type), 
+	  na.rm = TRUE,
+	  colour = "grey80", 
+	  size = 1
+	) +
+	geom_point(
+	  data = filter(example_homicides, scenario == trend_type), 
+	  na.rm = TRUE,
+	  colour = "grey80"
+	) +
+  geom_line(na.rm = TRUE, colour = "#EA7600", size = 1) +
+  geom_point(na.rm = TRUE, colour = "#EA7600") +
+  annotate(
+    "label", 
+    label = trend_type,
+    x = 2010.5, 
+    y = 10, 
+    fill = "orange", 
+    fontface = "bold",
+    hjust = 0, 
+    label.size = NA, 
+    label.padding = unit(0.5, "lines"), 
+    size = 5,
+    vjust = 0
+  )
+```
+
+---
+
 # Need to account for trends
 .center[![trends](imgs/ignore_trends.png)]
 
@@ -184,17 +376,186 @@ class: center, middle
 .center[![noise](imgs/ignore_noise.png)]
 
 ---
-class: middle
-# Forecasting: a better method
 
-.pull-left[Create a synthetic comparison group by using previous crime data to build a model that forecast how much crime would have occurred in the absence of the pandemic.]
-.pull-right[![forecasting](imgs/forecasting_book.png)]
+# Another way to understand change
 
+```{r cin-chart-prep, include=FALSE}
+# Load data from Cincinnati for ARIMA example chart
+cin_calls <- read_rds("imgs/cin_calls.Rds")
+cin_model <- read_rds("imgs/cin_model.Rds")
+cin_forecast <- read_rds("imgs/cin_forecast.Rds")
 
+# Build a basic chart that we can build on later
+cin_chart <- cin_calls %>% 
+  filter(week <= ymd("2020-01-20")) %>% 
+  ggplot(aes(week, calls)) +
+  scale_x_date(
+    date_breaks = "6 months", 
+    date_labels = "%b\n%Y", 
+    limits = c(ymd("2016-01-01"), ymd("2020-09-30")),
+    expand = expansion(mult = c(0.02, 0))
+  ) +
+  scale_y_continuous(
+    limits = c(0, 11000), 
+    labels = scales::comma_format(accuracy = 1, scale = 1/1000, suffix = "k"),
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+    scale_fill_manual(
+      values = c(`FALSE` = "grey90", `TRUE` = "black"),
+      labels = c(
+        `FALSE` = "calls within 99% CI",
+        `TRUE` = "calls outside 99% CI"
+      )
+    ) +
+  labs(
+    fill = NULL,
+    x = NULL,
+    y = "total calls per week, Cincinnati"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.background = element_rect(colour = NA, fill = "white"),
+    legend.justification = c(1, 0),
+    legend.position = c(1, 0.05),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+```
+
+```{r cin-chart-1, fig.asp=0.56, fig.retina=4, out.width="100%"}
+# Print the basic chart (this needs to be in a seprate chunk because the 
+# `cin-chart-prep` chunk needs `include=FALSE`)
+cin_chart
+```
 
 ---
 
-# Forecasting Calls for Service
+# Another way to understand change
+
+```{r cin-chart-2, fig.asp=0.56, fig.retina=4, out.width="100%"}
+cin_chart <- cin_chart + 
+  # print points showing actual counts before COVID
+  geom_point(size = 0.75, colour = "grey67")
+
+cin_chart +
+  annotate(
+    "label", 
+    label = "1. count calls",
+    x = ymd("2016-03-01"), 
+    y = 1000, 
+    fill = "orange", 
+    fontface = "bold", 
+    hjust = 0, 
+    label.size = NA, 
+    label.padding = unit(0.5, "lines"), 
+    vjust = 0
+  )
+```
+
+---
+
+# Another way to understand change
+
+```{r cin-chart-3, fig.asp=0.56, fig.retina=4, out.width="100%"}
+cin_chart <- cin_chart + 
+  # print line showing model fitted counts
+  geom_line(aes(week, .fitted), data = cin_model)
+
+cin_chart + 
+  annotate(
+    "label", 
+    label = "2. estimate auto-ARIMA model",
+    x = ymd("2016-03-01"), 
+    y = 1000, 
+    fill = "orange", 
+    fontface = "bold", 
+    hjust = 0, 
+    label.size = NA, 
+    label.padding = unit(0.5, "lines"), 
+    vjust = 0
+  )
+```
+
+---
+
+# Another way to understand change
+
+```{r cin-chart-4, fig.asp=0.56, fig.retina=4, out.width="100%"}
+cin_chart <- cin_chart + 
+  geom_vline(
+    aes(xintercept = ymd("2020-01-20")), 
+    size = 0.25, 
+    colour = "grey50"
+  ) +
+  # print line showing CI around estimate
+  geom_ribbon(
+    aes(x = week, ymin = lower, ymax = upper), 
+    data = cin_forecast,
+    na.rm = TRUE,
+    inherit.aes = FALSE,
+    fill = "grey90"
+  ) +
+  # print line showing estimate of crimes
+  geom_line(
+    aes(week, estimate), 
+    data = cin_forecast, 
+    na.rm = TRUE, 
+    colour = "grey60",
+    linetype = "32"
+  )
+
+cin_chart + 
+  annotate(
+    "label", 
+    label = "3. forecast from model (with 99% CIs)",
+    x = ymd("2016-03-01"), 
+    y = 1000, 
+    fill = "orange", 
+    fontface = "bold", 
+    hjust = 0, 
+    label.size = NA, 
+    label.padding = unit(0.5, "lines"), 
+    vjust = 0
+  )
+```
+
+---
+
+# ARIMA models: a better way to understand change
+
+```{r cin-chart-5, fig.asp=0.56, fig.retina=4, out.width="100%"}
+cin_chart + 
+  # print line showing count of crimes
+  geom_line(
+    aes(x = week, y = calls), 
+    data = filter(cin_forecast, week >= ymd("2020-01-20")), 
+    na.rm = TRUE, 
+    colour = "black"
+  ) +
+  # print points showing actual counts after COVID
+  geom_point(
+    aes(week, calls, fill = sig), 
+    data = filter(cin_forecast, week >= ymd("2020-01-20")), 
+    na.rm = TRUE,
+    # size = 0.75, 
+    colour = "black",
+    shape = 21
+  ) + 
+  annotate(
+    "label", 
+    label = "4. compare counts to forecast",
+    x = ymd("2016-03-01"), 
+    y = 1000, 
+    fill = "orange", 
+    fontface = "bold", 
+    hjust = 0, 
+    label.size = NA, 
+    label.padding = unit(0.5, "lines"), 
+    vjust = 0
+  )
+```
+
+---
 
 ```{r totalcallsfig, fig.width=11,fig.height=7}
 
@@ -275,16 +636,20 @@ gridExtra::grid.arrange(p1, p2, ncol = 1)
 ```
 
 ---
+
 # Expressions of concern
 
-> "ASB calls [are] about COVID breaches being coded as ASB... lots of people were reporting other people for breaching the rules. There were a lot of calls where people were very frustrated and they were complaining about their neighbours and the sort of call that sticks in my mind, which I found quite moving quite upsetting really was when somebody would ring in and say that they weren't able to go and visit their elderly relative who lived maybe a mile away... and their next door neighbour was having a party and all these people were turning up." (interview 1)
+> "ASB calls [are] about COVID breaches being coded as ASB … lots of people were reporting other people for breaching the rules. There were a lot of calls where people were very frustrated and they were complaining about their neighbours and the sort of call that sticks in my mind, which I found quite moving quite upsetting really was when somebody would ring in and say that they weren't able to go and visit their elderly relative who lived maybe a mile away … and their next door neighbour was having a party and all these people were turning up." (interview 1)
 
---
+---
 
-> "... at the start of it, nobody really knew how it was going to affect them. I think there were a lot of people were quite genuinely scared that they were gonna maybe die from it." (interview 3)
+# Expressions of concern
 
---
+> "… at the start of it, nobody really knew how it was going to affect them. I think there were a lot of people were quite genuinely scared that they were gonna maybe die from it." (interview 3)
 
+---
+
+# Expressions of concern
 
 > "We do get quite a lot of calls, sometimes about oh, you know the the neighbors are smoking drugs in the back garden, you know, sort of weed, that kind of thing." (interview 8)
 
@@ -299,28 +664,39 @@ forecast_chart(call_forecasts, "incident_type_new", "Advice/Directions/Admin")
 
 ---
 
-# Calls for information/ reassurance
+# Calls for information/reassurance
 
-> "...in the first part of the first lockdown, people were very confused and very worried about breaking the law and very worried about being arrested for and they would ring up and say, can I do this and can I do that so people were actually asking our advice ..." (interview 1)
+> "… in the first part of the first lockdown, people were very confused and very worried about breaking the law and very worried about being arrested for and they would ring up and say, can I do this and can I do that so people were actually asking our advice …" (interview 1)
 
---
+---
 
-> "...there are also people calling in because they wanted advice about regulations or were uncertain about what they were allowed to do things..." (interview 3)
+# Calls for information/reassurance
 
---
+> "… there are also people calling in because they wanted advice about regulations or were uncertain about what they were allowed to do things …" (interview 3)
 
-> "I'd say there's definitely an increase in mental health related incidents that we're seeing and I think people are just really struggling with the isolation of being away from everyone... Sometimes people don't know [who to call] to speak to someone for support so they just ring the police. " (interview 4)
+---
+
+# Calls for information/reassurance
+
+> "I'd say there's definitely an increase in mental health related incidents that we're seeing and I think people are just really struggling with the isolation of being away from everyone … Sometimes people don't know [who to call] to speak to someone for support so they just ring the police. " (interview 4)
 
 ---
 
 # Support for such calls
 
+> "We were directing people to the government website … We were we're not really qualified to advise people on the regulations that actually fit their particular area, because there was an area to area thing at certain times during the lockdown where different local councils and had different idea about the rules, interpreted the rules differently …" (interview 1)
 
-> "We were directing people to the government website... We were we're not really qualified to advise people on the regulations that actually fit their particular area, because there was an area to area thing at certain times during the lockdown where different local councils and had different idea about the rules, interpreted the rules differently..." (interview 1)
+---
 
-> "Getting quite a few calls from elderly people asking for advice ...  advice on guidelines...  Of course we referred them to the government website because they're better off going something like that's got advice in relation to [COVID regulations] (interview 4) 
+# Support for such calls
 
-> "We have an FAQ. That specially for FCC stuff. And most of the answers can be found in there... There was plenty of support here at work. ...we had a very large VDU display on the wall with the latest rules and regulations like a like a PowerPoint running through on a continual on a continual rotation." (interview 1) 
+> "Getting quite a few calls from elderly people asking for advice … advice on guidelines … Of course we referred them to the government website because they're better off going something like that's got advice in relation to [COVID regulations] (interview 4) 
+
+---
+
+# Support for such calls
+
+> "We have an FAQ. That specially for FCC stuff. And most of the answers can be found in there … There was plenty of support here at work … we had a very large VDU display on the wall with the latest rules and regulations like a like a PowerPoint running through on a continual on a continual rotation." (interview 1) 
 
 
 ---
@@ -337,7 +713,9 @@ forecast_chart(call_forecasts, "incident_type_new", "Violence/Harassment")
 
 > "Kickoffs, if if I can say that Saturday nights drunken night, yeah, those sort of thing, those sort of calls were a massive decrease." (interview 5)
 
---
+---
+
+# Night time economy
 
 > "A lot of the violence incidents that we deal with, especially the likes of Friday night, Saturday night, weekends people have been out drinking and the clubs and pubs and starting fights wasn't happening because the pubs weren't open." (interview 8)
 
@@ -345,7 +723,7 @@ forecast_chart(call_forecasts, "incident_type_new", "Violence/Harassment")
 
 # Online harassment
 
-> "There's definitely more online crime. So obviously people are not able to go out and interact in person, but they can over social media and other avenues, such as phone calls, texts - these definitely seem more... I'd say they changed in the sense that the threats were still being made, but not in person, so they will be made over a text or a phone call, social media..." (interview 4)
+> "There's definitely more online crime. So obviously people are not able to go out and interact in person, but they can over social media and other avenues, such as phone calls, texts - these definitely seem more … I'd say they changed in the sense that the threats were still being made, but not in person, so they will be made over a text or a phone call, social media …" (interview 4)
 
 
 
@@ -390,31 +768,39 @@ gridExtra::grid.arrange(p1, p2,p3, p4, ncol = 2)
 
 ---
 class: center, middle
+
 # Domestic incidents: no increase
 
 > "We were expecting an increase in domestic violence and domestic violence is a big issue for any force. And I'm not sure that in the early days we saw an increase. Certainly I didn't notice a dramatic increase or anything like that. (interview 3)
  
---
+---
+
+# Domestic incidents: no increase
 
 > "I don't really remember them being any higher in the lock downs than normal, and there were a lot of people were saying that all domestics have gone up, but I'm just guessing that people were spending so much time with each other forced that they're gonna have arguments. " (interview 6)
  
---
+---
+
+# Domestic incidents: no increase
 
 > "I did expect more domestics and things because people were in their addresses, but it didn't. From my personal experience didn't seem to happen." (interview 7)
 
---
+---
 
-> "... when we get the calls it's like ... when they've been out on the town up to the pubs having drinks and then they come back and they disagree over something so little. And that's when the domestic start." (interview 5)
+# Domestic incidents: no increase
+
+> "… when we get the calls it's like … when they've been out on the town up to the pubs having drinks and then they come back and they disagree over something so little. And that's when the domestic start." (interview 5)
 
 ---
-class: center, middle
+
 # Domestic incidents: couldn't call?
 
-> "I remember a lady who was desperately upset. She was very, very distressed and this must have been as lockdown was easing a bit because her husband had actually gone out and this was the first opportunity she'd had to make the call... that Lady had more than likely gone through all sorts before she could actually found the opportunity to ring it in." (interview 1)
+> "I remember a lady who was desperately upset. She was very, very distressed and this must have been as lockdown was easing a bit because her husband had actually gone out and this was the first opportunity she'd had to make the call … that Lady had more than likely gone through all sorts before she could actually found the opportunity to ring it in." (interview 1)
 
 
 ---
 class: center, middle, inverse
+
 # Change in nature of the demand
 
 ---
@@ -558,7 +944,7 @@ class: center, middle, inverse
 ---
 class: center, middle
 
-## Highlights: 
+# Highlights
 
 - Expressions of concern
 - Calls for advice
@@ -567,20 +953,28 @@ class: center, middle
 - For ASB the caller "profile" changed
 
 
-For more (quiet roads, absence of potential victims, presence of guardians, changes in police response) please see the full report [on N8PRP website](https://www.n8prp.org.uk/home/research/small-grants/changing-demand-for-police-during-covid-19/)
-
-
 ---
 class: center, middle
-## Recommendations
+# Recommendations
 
-- Further spatiotemporal analysis
+- Further spatio-temporal analysis
 - Share good practice (e.g. FHQ information to clarify rules and regulations)
 - Further and more robust look at changes to domestic incidents
 
+
 ---
 class: center, middle
-## Further training outputs
+
+# More details
+
+Much more (e.g. quiet roads, absence of potential victims, presence of guardians, changes in police response) at [**bit.ly/n8-covid-calls-report**](https://bit.ly/n8-covid-calls-report)
+
+<img src="imgs/n8-covid-calls-report-qr-code.png" alt="QR code leading to the URL https://bit.ly/n8-covid-calls-report", height="300">
+
+
+---
+class: center, middle
+# Further training outputs
 
 - [UKDS webinar: an introduction to time series analysis and forecasting](https://ukdataservice.ac.uk/events/an-introduction-to-time-series-analysis-and-forecasting-2/)
 - A co-developed series for analysts using R and Python
