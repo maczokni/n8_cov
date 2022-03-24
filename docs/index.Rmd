@@ -154,16 +154,18 @@ Binary comparisons of one period to another are common, but can be seriously mis
 ---
 
 class: center, middle
-.pull-right[
-![COVID19 and crime article](imgs/cov_news_01.png)
-![COVID19 and crime article](imgs/cov_news_02.png)
-]
 
+<table>
+  <tr>
+    <td><img src="imgs/cov_news_01.png" alt="Newspaper headline: 'This is too much': crime continues despite pandemic"></td>
+    <td><img src="imgs/cov_news_02.png" alt="Newspaper headline: Exhausted cities face another challenge: a surge in violence"></td>
+  </tr>
+  <tr style="background-color: #FFFFFF;">
+    <td><img src="imgs/cov_news_03.png" alt="Newspaper headline: Crime in UK falls sharply since start of coronavirus lockdown"></td>
+    <td><img src="imgs/cov_news_04.png" alt="Newspaper headline: Crime rates drop across US amid the coronavirus pandemic"></td>
+  </tr>
+</table>
 
-.pull-left[
-![COVID19 and crime article](imgs/cov_news_03.png)
-![COVID19 and crime article](imgs/cov_news_04.png)
-]
 
 ---
 
