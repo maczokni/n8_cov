@@ -633,9 +633,11 @@ p1 <- forecast_chart(call_forecasts, "incident_type_new", "ASB") +
       y = NULL,
       fill = NULL) + 
   guides(fill="none")
-p2 <- forecast_chart(call_forecasts, "incident_type_new", "Drugs")
+# p2 <- forecast_chart(call_forecasts, "incident_type_new", "Drugs")
+# 
+# gridExtra::grid.arrange(p1, p2, ncol = 1)
 
-gridExtra::grid.arrange(p1, p2, ncol = 1)
+p1
 
 
 ```
@@ -670,16 +672,9 @@ forecast_chart(call_forecasts, "incident_type_new", "Advice/Directions/Admin")
 
 ---
 
-# Support for such calls - direct to government website
-
-
-> "Getting quite a few calls from elderly people asking for advice … advice on guidelines … Of course we referred them to the government website because they're better off going something like that's got advice in relation to [COVID regulations] (interview 4) 
-
----
-
 # Support for such calls - internal FAQ
 
-> "We have an FAQ. That specially for FCC stuff. And most of the answers can be found in there … There was plenty of support here at work … we had a very large VDU display on the wall with the latest rules and regulations like a like a PowerPoint running through on a continual on a continual rotation." (interview 1) 
+> "We have an FAQ. That specially for FCC stuff. And most of the answers can be found in there … There was plenty of support here at work … we had a very large VDU display on the wall with the latest rules and regulations like a like a PowerPoint running through on a continual rotation." (interview 1) 
 
 
 ---
@@ -700,7 +695,7 @@ forecast_chart(call_forecasts, "incident_type_new", "Violence/Harassment")
 
 # Online harassment
 
-> "There's definitely more online crime. So obviously people are not able to go out and interact in person, but they can over social media and other avenues, such as phone calls, texts - these definitely seem more … I'd say they changed in the sense that the threats were still being made, but not in person, so they will be made over a text or a phone call, social media …" (interview 4)
+> "So obviously people are not able to go out and interact in person, but they can over social media and other avenues, such as phone calls, texts - these definitely seem more … I'd say they changed in the sense that the threats were still being made, but not in person, so they will be made over a text or a phone call, social media …" (interview 4)
 
 
 
@@ -717,31 +712,6 @@ forecast_chart(call_forecasts, "incident_type_new", "Domestic Incident")
 ```
 
 
----
-
-# Domestic incidents
-This does not change when we break down by grade of call.
-
-```{r domesticbygradefig, fig.width=11,fig.height=7}
-
-# Domestic by grade fig
-
-p1 <- forecast_chart(domestic_by_grade_volume_forecasts,"initial_grade_of_response", "Grade 1")
-p2 <- forecast_chart(domestic_by_grade_volume_forecasts,"initial_grade_of_response", "Grade 2") + 
-  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
-  guides(fill="none")
-p3 <- forecast_chart(domestic_by_grade_volume_forecasts,"initial_grade_of_response", "Grade 3") + 
-  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
-  guides(fill="none")
-p4 <- forecast_chart(domestic_by_grade_volume_forecasts,"initial_grade_of_response", "Grade 4") + 
-  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
-  guides(fill="none")
-
-gridExtra::grid.arrange(p1, p2,p3, p4, ncol = 2)
-
-
-
-```
 
 ---
 
