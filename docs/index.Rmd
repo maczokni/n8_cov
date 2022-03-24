@@ -662,7 +662,7 @@ forecast_chart(call_forecasts, "incident_type_new", "Advice/Directions/Admin")
 
 # Calls for information
 
-> "… there are also people calling in because they wanted advice about regulations or were uncertain about what they were allowed to do things …" (interview 3)
+> "… there are also people calling in because they wanted advice about regulations or were uncertain about what they were allowed to do …" (interview 3)
 
 ---
 
@@ -674,7 +674,7 @@ forecast_chart(call_forecasts, "incident_type_new", "Advice/Directions/Admin")
 
 # Support for such calls - internal FAQ
 
-> "We have an FAQ. That specially for FCC stuff. And most of the answers can be found in there … There was plenty of support here at work … we had a very large VDU display on the wall with the latest rules and regulations like a like a PowerPoint running through on a continual rotation." (interview 1) 
+> "We have an FAQ. That specially for FCC staff. And most of the answers can be found in there … There was plenty of support here at work … we had a very large VDU display on the wall with the latest rules and regulations like a like a PowerPoint running through on a continual rotation." (interview 1) 
 
 
 ---
@@ -732,7 +732,7 @@ forecast_chart(call_forecasts, "incident_type_new", "Domestic Incident")
 
 # Domestic incidents: couldn't call?
 
-> "I remember a lady who was desperately upset. She was very, very distressed and this must have been as lockdown was easing a bit because her husband had actually gone out and this was the first opportunity she'd had to make the call … that Lady had more than likely gone through all sorts before she could actually found the opportunity to ring it in." (interview 1)
+> "I remember a lady who was desperately upset. She was very, very distressed and this must have been as lockdown was easing a bit because her husband had actually gone out and this was the first opportunity she'd had to make the call … " (interview 1)
 
 
 ---
@@ -886,7 +886,7 @@ class: center, middle
 - Expressions of concern
 - Calls for advice
 - Violence drop
-- No change in domestic violence
+- No change in domestic incidents
 - For ASB the caller "profile" changed
 
 
@@ -901,22 +901,21 @@ class: center, middle
 
 ---
 class: center, middle
-
-# More details
-
-Much more (e.g. quiet roads, absence of potential victims, presence of guardians, changes in police response) at [**bit.ly/n8-covid-calls-report**](https://bit.ly/n8-covid-calls-report)
-
-<img src="imgs/n8-covid-calls-report-qr-code.png" alt="QR code leading to the URL https://bit.ly/n8-covid-calls-report", height="300">
-
-
----
-class: center, middle
 # Sharing the learning
 
 - [UKDS webinar: an introduction to time series analysis and forecasting](https://ukdataservice.ac.uk/events/an-introduction-to-time-series-analysis-and-forecasting-2/)
 - A co-developed series for analysts using R and Python
 
 ---
-class: center, middle, invesre
+class: center, middle
 
 # Reflections on impact
+
+---
+class: center, middle
+
+# More details
+
+Much more (e.g. quiet roads, absence of potential victims, presence of guardians, changes in police response) at [**bit.ly/n8-covid-calls-report**](https://bit.ly/n8-covid-calls-report)
+
+<img src="imgs/n8-covid-calls-report-qr-code.png" alt="QR code leading to the URL https://bit.ly/n8-covid-calls-report", height="300">
