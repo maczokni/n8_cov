@@ -162,7 +162,8 @@ class: center, middle
 
 .pull-left[
 ![COVID19 and crime article](imgs/cov_news_03.png)
-![COVID19 and crime article](imgs/cov_news_04.png)]
+![COVID19 and crime article](imgs/cov_news_04.png)
+]
 
 ---
 
@@ -556,6 +557,11 @@ cin_chart +
 ```
 
 ---
+class: center, middle, inverse
+
+# Results
+
+---
 
 ```{r totalcallsfig, fig.width=11,fig.height=7}
 
@@ -600,10 +606,7 @@ all_calls %>%
 
 ```
 
----
-class: center, middle, inverse
 
-# Results
 
 ---
 class: center, middle, inverse
@@ -643,18 +646,6 @@ gridExtra::grid.arrange(p1, p2, ncol = 1)
 
 ---
 
-# Expressions of concern
-
-> "… at the start of it, nobody really knew how it was going to affect them. I think there were a lot of people were quite genuinely scared that they were gonna maybe die from it." (interview 3)
-
----
-
-# Expressions of concern
-
-> "We do get quite a lot of calls, sometimes about oh, you know the the neighbors are smoking drugs in the back garden, you know, sort of weed, that kind of thing." (interview 8)
-
----
-
 ## Advice/Directions/Admin
 
 ```{r Admin, fig.width=11,fig.height=8}
@@ -662,39 +653,29 @@ gridExtra::grid.arrange(p1, p2, ncol = 1)
 forecast_chart(call_forecasts, "incident_type_new", "Advice/Directions/Admin")
 ```
 
----
-
-# Calls for information/reassurance
-
-> "… in the first part of the first lockdown, people were very confused and very worried about breaking the law and very worried about being arrested for and they would ring up and say, can I do this and can I do that so people were actually asking our advice …" (interview 1)
 
 ---
 
-# Calls for information/reassurance
+# Calls for information
 
 > "… there are also people calling in because they wanted advice about regulations or were uncertain about what they were allowed to do things …" (interview 3)
 
 ---
 
-# Calls for information/reassurance
+# Calls for reassurance
 
 > "I'd say there's definitely an increase in mental health related incidents that we're seeing and I think people are just really struggling with the isolation of being away from everyone … Sometimes people don't know [who to call] to speak to someone for support so they just ring the police. " (interview 4)
 
 ---
 
-# Support for such calls
+# Support for such calls - direct to government website
 
-> "We were directing people to the government website … We were we're not really qualified to advise people on the regulations that actually fit their particular area, because there was an area to area thing at certain times during the lockdown where different local councils and had different idea about the rules, interpreted the rules differently …" (interview 1)
-
----
-
-# Support for such calls
 
 > "Getting quite a few calls from elderly people asking for advice … advice on guidelines … Of course we referred them to the government website because they're better off going something like that's got advice in relation to [COVID regulations] (interview 4) 
 
 ---
 
-# Support for such calls
+# Support for such calls - internal FAQ
 
 > "We have an FAQ. That specially for FCC stuff. And most of the answers can be found in there … There was plenty of support here at work … we had a very large VDU display on the wall with the latest rules and regulations like a like a PowerPoint running through on a continual on a continual rotation." (interview 1) 
 
@@ -706,12 +687,6 @@ forecast_chart(call_forecasts, "incident_type_new", "Advice/Directions/Admin")
 ```{r Violence/Harassment, fig.width=11,fig.height=7}
 forecast_chart(call_forecasts, "incident_type_new", "Violence/Harassment")
 ```
-
----
-
-# Night time economy
-
-> "Kickoffs, if if I can say that Saturday nights drunken night, yeah, those sort of thing, those sort of calls were a massive decrease." (interview 5)
 
 ---
 
@@ -767,27 +742,17 @@ gridExtra::grid.arrange(p1, p2,p3, p4, ncol = 2)
 ```
 
 ---
-class: center, middle
+
 
 # Domestic incidents: no increase
 
 > "We were expecting an increase in domestic violence and domestic violence is a big issue for any force. And I'm not sure that in the early days we saw an increase. Certainly I didn't notice a dramatic increase or anything like that. (interview 3)
- 
----
-
-# Domestic incidents: no increase
-
-> "I don't really remember them being any higher in the lock downs than normal, and there were a lot of people were saying that all domestics have gone up, but I'm just guessing that people were spending so much time with each other forced that they're gonna have arguments. " (interview 6)
- 
----
-
-# Domestic incidents: no increase
 
 > "I did expect more domestics and things because people were in their addresses, but it didn't. From my personal experience didn't seem to happen." (interview 7)
 
 ---
 
-# Domestic incidents: no increase
+# Domestic incidents linked with NTE
 
 > "… when we get the calls it's like … when they've been out on the town up to the pubs having drinks and then they come back and they disagree over something so little. And that's when the domestic start." (interview 5)
 
@@ -974,7 +939,12 @@ Much more (e.g. quiet roads, absence of potential victims, presence of guardians
 
 ---
 class: center, middle
-# Further training outputs
+# Sharing the learning
 
 - [UKDS webinar: an introduction to time series analysis and forecasting](https://ukdataservice.ac.uk/events/an-introduction-to-time-series-analysis-and-forecasting-2/)
 - A co-developed series for analysts using R and Python
+
+---
+class: center, middle, invesre
+
+# Reflections on impact
