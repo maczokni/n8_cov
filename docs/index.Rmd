@@ -1,9 +1,9 @@
 ---
 title: "Changes to police demand in COVID-19 pandemic"
-subtitle: "N8PRP Webinar"
+subtitle: ""
 author: "Réka Solymosi, Matt Ashby, Eon Kim, Nadia Kennar, Karen Byrom, Alex McMillan, Phoebe Liebelt"
 institute: "University of Manchester, Cheshire Constabulary, UCL"
-date: "24/03/2022"
+date: "10/05/2022"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -617,6 +617,35 @@ class: center, middle, inverse
 
 
 
+---
+
+# Quiet roads
+
+```{r quietroadsplots, fig.width=11,fig.height=8}
+
+
+p1 <- forecast_chart(call_forecasts, "incident_type_new" ,"traffic collision") + 
+  labs(title = "Traffic Collision",
+      subtitle = "",
+      caption = "",
+      x = NULL,
+      y = NULL,
+      fill = NULL) + 
+  guides(fill="none")
+p2 <- forecast_chart(call_forecasts, "incident_type_new" ,"Highway Disruption")+ 
+  labs(subtitle = "", caption = "", x = NULL, fill = NULL) + 
+  guides(fill="none")
+p3 <- forecast_chart(call_forecasts, "incident_type_new" ,"Road Related Traffic Offence")  +
+  labs(subtitle = "",
+      caption = "Forecast calculated using data up to 31 January 2020",
+      x = NULL,
+      y = NULL,
+      fill = "Actual observed value significantly different from forecast")
+
+gridExtra::grid.arrange(p1, p2, p3, ncol = 1)
+
+
+```
 
 
 ---
@@ -734,6 +763,215 @@ forecast_chart(call_forecasts, "incident_type_new", "Domestic Incident")
 
 > "I remember a lady who was desperately upset. She was very, very distressed and this must have been as lockdown was easing a bit because her husband had actually gone out and this was the first opportunity she'd had to make the call … " (interview 1)
 
+---
+
+# Presence of guardians/ absence of targets
+
+
+```{r guardiansplot1, fig.width=11,fig.height=8}
+
+forecast_chart(call_forecasts, "incident_type_new", "Burglary - Residential") 
+
+```
+
+---
+
+# Presence of guardians/ absence of targets
+
+
+```{r guardiansplot2, fig.width=11,fig.height=7}
+
+
+p1 <- forecast_chart(call_forecasts, "incident_type_new", "Theft From Motor Vehicle") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p2 <- forecast_chart(call_forecasts, "incident_type_new", "Theft Of Motor Vehicle") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p3 <- forecast_chart(call_forecasts, "incident_type_new", "Theft Other")
+
+gridExtra::grid.arrange(p1, p2,p3, ncol = 1)
+
+```
+
+---
+
+# Presence of guardians/ absence of targets
+
+
+```{r guardiansplot3, fig.width=11,fig.height=7}
+
+
+p1 <- forecast_chart(call_forecasts, "incident_type_new", "Shoplifting") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p2 <- forecast_chart(call_forecasts, "incident_type_new", "Robbery") 
+
+gridExtra::grid.arrange(p1, p2, ncol = 1)
+
+```
+---
+
+# Police response: Attendance rate
+
+
+```{r allattendedfig, fig.width=11,fig.height=7}
+
+# % attended fig and response time fig
+all_calls_attended_forecast %>% 
+    mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
+    ggplot() +
+    # Forecast
+    geom_ribbon(
+      aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+      na.rm = TRUE,
+      alpha = 0.5, 
+      fill = "grey80"
+    ) +
+    geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+    # Actual calls
+    geom_line(aes(incident_week, actual_attended)) +
+    geom_point(aes(incident_week, actual_attended, fill = sig), shape = 21) +
+    scale_x_date(date_labels = "%e %b\n%Y", 
+               limits = as.Date(c("2020-01-06", "2020-12-21"))) +
+    scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+    scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+    labs(
+      title = "Attendance rate for all calls for service during 2020 compared to pre-pandemic forecast",
+      subtitle = str_wrap(
+        str_glue("Events by week: ", str_c(pull(dates, label), collapse = "; ")), 
+        80
+      ),
+      caption = "Forecast calculated using data up to 31 January 2020",
+      x = NULL,
+      y = "weekly % of calls attended",
+      fill = "actual % significantly different from forecast"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+  
+
+
+```
+
+---
+
+# Police response: Attendance rate
+
+```{r bygradeattendedperc, fig.width=11,fig.height=7}
+
+p1 <- forecast_chart(attended_by_grade_forecast,"initial_grade_of_response", "Grade 1") + 
+  labs(subtitle = "", caption = "", x = NULL, fill = NULL) + 
+  guides(fill="none")
+p2 <- forecast_chart(attended_by_grade_forecast,"initial_grade_of_response", "Grade 2") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p3 <- forecast_chart(attended_by_grade_forecast,"initial_grade_of_response", "Grade 3") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p4 <- forecast_chart(attended_by_grade_forecast,"initial_grade_of_response", "Grade 4") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+
+gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+
+
+```
+
+---
+
+# Police response: Response time
+
+```{r allresptimefig, fig.width=11,fig.height=8}
+
+all_rt_forecast %>% 
+    mutate(forecast_lower = ifelse(forecast_lower < 0, 0, forecast_lower)) %>% 
+    ggplot() +
+    # Forecast
+    geom_ribbon(
+      aes(incident_week, ymin = forecast_lower, ymax = forecast_upper), 
+      na.rm = TRUE,
+      alpha = 0.5, 
+      fill = "grey80"
+    ) +
+    geom_line(aes(incident_week, forecast_mean), na.rm = TRUE, linetype = "22") +
+    # Dates of interest
+    geom_vline(aes(xintercept = date), data = dates, linetype = "12") +
+    geom_label(aes(date, 0, label = row), data = dates, colour = "grey20") +
+    # Actual calls
+    geom_line(aes(incident_week, actual_rt)) +
+    geom_point(aes(incident_week, actual_rt, fill = sig), shape = 21) +
+    scale_x_date(date_labels = "%e %b\n%Y") +
+    scale_y_continuous(limits = c(0, NA), labels = scales::comma_format()) +
+    scale_fill_manual(values = c(`TRUE` = "black", `FALSE` = "grey80")) +
+    labs(
+      title = "Median response time for all calls for service during 2020 compared to pre-pandemic forecast",
+      caption = "Forecast calculated using data up to 31 January 2020",
+      x = NULL,
+      y = "Median response time in minutes",
+      fill = "Response time significantly different from forecast"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom", plot.title = element_text(face = "bold"))
+
+```
+
+---
+
+# Police response: Response time
+
+```{r bygraderesptime, fig.width=11,fig.height=7}
+
+p1 <- forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 1") + 
+  labs(subtitle = "", caption = "", x = NULL, fill = NULL) + 
+  guides(fill="none")
+p2 <- forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 2") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p3 <- forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 3") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p4 <- forecast_chart(by_grade_rt_forecast,"initial_grade_of_response", "Grade 4") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+
+gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+
+
+```
+
+---
+
+# Police response: Time on scene
+
+Need alltogether time on scene graph here
+
+---
+
+# Police response: Time on scene
+
+```{r bygradetos, fig.width=11,fig.height=7}
+
+p1 <- forecast_chart(by_grade_tos_forecasts,"initial_grade_of_response", "Grade 1") + 
+  labs(subtitle = "", caption = "", x = NULL, fill = NULL) + 
+  guides(fill="none")
+p2 <- forecast_chart(by_grade_tos_forecasts,"initial_grade_of_response", "Grade 2") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p3 <- forecast_chart(by_grade_tos_forecasts,"initial_grade_of_response", "Grade 3") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+p4 <- forecast_chart(by_grade_tos_forecasts,"initial_grade_of_response", "Grade 4") + 
+  labs(subtitle = "", caption = "", x = NULL, y = NULL, fill = NULL) + 
+  guides(fill="none")
+
+gridExtra::grid.arrange(p1, p2, p3, p4, ncol = 2)
+
+
+```
 
 ---
 class: center, middle, inverse
@@ -898,13 +1136,6 @@ class: center, middle
 - Share good practice (e.g. FHQ information to clarify rules and regulations)
 - Further and more robust look at changes to domestic incidents
 
-
----
-class: center, middle
-# Sharing the learning
-
-- [UKDS webinar: an introduction to time series analysis and forecasting](https://ukdataservice.ac.uk/events/an-introduction-to-time-series-analysis-and-forecasting-2/)
-- A co-developed series for analysts using R and Python
 
 ---
 class: center, middle
